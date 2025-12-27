@@ -4,9 +4,81 @@ import { GiAbstract084 } from "react-icons/gi";
 import { NavLink } from 'react-router-dom'; 
 import { FiHome, FiBook, FiPhone, FiStar, FiShoppingCart, FiLogOut, FiKey } from "react-icons/fi";
 import { useCart } from '../../CartContext/CartContext';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import Login from '../../Components/Login/Login'; // adjust path if different
+
 const Navbar = () => { 
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate()
+  const location = useLocation();
   const {totalItems} = useCart();
+  const [showLoginModel, setShowLoginModel] = useState(false);
+
+  //COMBINE UPDATING LOGIN MODEL AND AUTH STATUS ON LOCATION CHANGE
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    Boolean(localStorage.getItem('loginData'))
+  )
+  useEffect(() => {
+    setShowLoginModel(location.pathname === '/login');
+    setIsAuthenticated(Boolean(localStorage.getItem('loginData')))
+  }, [location.pathname])
+  const handleLoginSuccess = () => {
+    localStorage.setItem('loginData', JSON.stringify({ loggedIn: true}));
+    setIsAuthenticated(true);
+    navigate('/');
+  }
+  const handleLogout = () => {
+    localStorage.removeItem('loginData');
+    setIsAuthenticated(false);
+  }
+
+  //EXTRACT DESKTOP AUTH BUTTON
+  const renderDesktopAuthButton = () => {
+    return isAuthenticated ? (
+      <button onClick={handleLogout} className=' px-3 md:px-3 lg:px-6 py-1.5 md:py-2 lg:py-3 bg-gradient-to-br from-blue-600
+      to-blue-700 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-blue-600/40 transition-all
+      shadow-md shadow-blue-900/20 text-xs md:text-sm lg:text-sm'>
+        <FiLogOut className=' text-base md:text-lg lg:text-lg'/>
+        <span className= ' text-shadow'>Logout</span>
+      </button>
+    ) : (
+      <button onClick={() => navigate('/login')} className=' px-3 md:px-3 lg:px-6 py-1.5 md:py-2 lg:py-3 bg-gradient-to-br from-blue-600
+      to-blue-700 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-blue-600/40 transition-all
+      shadow-md shadow-blue-900/20 text-xs md:text-sm lg:text-sm'>
+        <FiKey className=' text-base md:text-lg lg:text-lg'/>
+        <span className= ' text-shadow'>Login</span>
+        </button>
+    )
+  }
+  // EXTRACT MOBILE AUTH BTN
+const renderMobileAuthButton = () => {
+  return isAuthenticated ? (
+    <button
+      onClick={handleLogout}
+      className="w-full px-4 py-3 bg-gradient-to-br from-amber-500 to-amber-700
+                 text-[#2D1B0E] rounded-xl font-semibold flex items-center
+                 justify-center space-x-2 text-sm"
+    >
+      <FiLogOut />
+      <span>Logout</span>
+    </button>
+  ) : (
+    <button
+      onClick={() => {
+        navigate('/login');
+        setIsOpen(false);
+      }}
+      className="w-full px-4 py-3 bg-gradient-to-br from-amber-500 to-amber-700
+                 text-[#2D1B0E] rounded-xl font-semibold flex items-center
+                 justify-center space-x-2 text-sm"
+    >
+      <FiKey />
+      <span>Login</span>
+    </button>
+  );
+};
+
   const navLinks = [
     {name: 'Home', to: '/', icon: <FiHome />},
     {name: 'Services', to: '/services', icon: <FiBook />},
@@ -78,7 +150,7 @@ const Navbar = () => {
                   </span>
                 )}
               </NavLink>
-
+              {renderDesktopAuthButton()}
             </div>
 
           </div>
@@ -123,13 +195,46 @@ const Navbar = () => {
   </span>
   <span>{link.name}</span>
 </NavLink>
-
               ))}
+              <div className=' pt-4 border-t-2 border-blue-900/30 space-y-2'>
+              <NavLink to='/cart' onClick={() => setIsOpen(false)}
+              className='w-full px-4 py-3 text-center text-white rounded-xl border-2 border-blue-900/30 hover:border-blue-500/50  flex
+              items-center justify-center space-x-2 text-sm'>
+                <FiShoppingCart className=' text-lg'/>
+                {totalItems > 0 && (
+                  <span className='top-2 right-2 bg-blue-600
+                  text-white text-xs w-5 h-5 rounded-full flex items-center justify-center'>
+                    {totalItems}
+                  </span>
+                )}
+              </NavLink>
+              {renderMobileAuthButton()}
+              </div>
 
             </div>
 
             </div>
           )}
+          {/* LOGIN MODEL */}
+          {showLoginModel && (
+            <div className=' fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4'>
+              <div className=' bg-gradient-to-br from-white to-blue-50 rounded-xl p-6
+              w-full max-w-[480px] relative border-4 border-blue-500/40 shadow-[0_0_30px] shadow-blue-500/30'>
+                <button onClick={() => navigate('/')}
+                  className=' absolute top-2 right-2 text-blue-400 hover:text-blue-600 text-2xl'>
+                    &times;
+                </button>
+                <h2 className=' text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600
+                bg-clip-text text-transparent mb-4 text-center'>
+                  Chill Thrive
+                </h2>
+                <Login onLoginSuccess={handleLoginSuccess} onClose={() => navigate('/')}/>
+              </div>
+
+            </div>
+          )
+          }
+
           </nav> 
           ); 
         }; 
