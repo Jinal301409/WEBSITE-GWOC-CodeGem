@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaBath } from "react-icons/fa6"; 
 import { GiAbstract084 } from "react-icons/gi"; 
 import { NavLink } from 'react-router-dom'; 
-import { FiHome, FiBook, FiPhone, FiStar, FiShoppingCart, FiLogOut, FiKey } from "react-icons/fi";
+import { FiHome, FiBook, FiPhone, FiStar, FiShoppingCart, FiLogOut, FiKey,  } from "react-icons/fi";
 import { useCart } from '../../CartContext/CartContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -107,10 +107,12 @@ const renderMobileAuthButton = () => {
         <GiAbstract084 className=' text-3xl md:text-4xl lg:text-5xl text-blue-400 transition-all 
         group-hover:rotate-12 group-hover:text-blue-300 hover:drop-shadow-[0_0_15px] hover:drop-shadow-blue-500/50'/> 
         <div className=' flex flex-col relative ml-2 max-w-[140px] md:max-w-[160px] lg:max-w-none'> 
-          <NavLink to='/' className=' text-xl md:text-2xl font-semibold text-white
-              hover:text-blue-300 transition'> 
-          Chill Thrive
-          </NavLink> 
+            <NavLink to='/' className=' text-xl md:text-4xl font-semibold text-white
+              hover:text-blue-300 transition flex items-center'> 
+              <span className='mr-2'>❄️</span>
+              Chill Thrive
+              <span className='ml-2'>❄️</span>
+            </NavLink> 
           <div className=' h-[3px] bg-gradient-to-r from-blue-600/30 via-blue-400/50 to-blue-600/30 w-full
           mt-1 ml-1 shadow-[0_2px_5px] shadow-blue-500/20'/>
           </div> 
