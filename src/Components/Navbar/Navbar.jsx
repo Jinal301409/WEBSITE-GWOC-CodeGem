@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FaBath } from "react-icons/fa6"; 
-import { GiAbstract084 } from "react-icons/gi"; 
 import { NavLink } from 'react-router-dom'; 
 import { FiHome, FiBook, FiPhone, FiStar, FiShoppingCart, FiLogOut, FiKey,  } from "react-icons/fi";
 import { useCart } from '../../CartContext/CartContext';
@@ -104,8 +103,6 @@ const renderMobileAuthButton = () => {
         lg:-translate-x-6 ml-0 md:ml-2' > 
         <div className=' absolute -inset-4 bg-blue-500/10 rounded-full blur-xl 
         opacity-0 group-hover/nav:opacity-100 transition-opacity duration-300'/> 
-        <GiAbstract084 className=' text-3xl md:text-4xl lg:text-5xl text-blue-400 transition-all 
-        group-hover:rotate-12 group-hover:text-blue-300 hover:drop-shadow-[0_0_15px] hover:drop-shadow-blue-500/50'/> 
         <div className=' flex flex-col relative ml-2 max-w-[140px] md:max-w-[160px] lg:max-w-none'> 
             <NavLink to='/' className=' text-xl md:text-4xl font-semibold text-white
               hover:text-blue-300 transition flex items-center'> 

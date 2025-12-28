@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { FaSearch } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa";
  import { FaPlay } from "react-icons/fa";
+ import { bannerAssets } from '../../assets/dummydata';
 
 const Banner = () => {
     const [searchQuery,setSearchQuery] = useState('');
     const [showVideo, setShowVideo] = useState(false);
-    const handleSearch = () => {
+    const {bannerImage, orbitImages, video} = bannerAssets;
+    const handleSearch = (e) => {
         e.preventDefault();
         console.log('Searching for:', searchQuery);
     }
@@ -86,8 +88,20 @@ const Banner = () => {
             {/* MAIN IMG */}
             <div className=' relative rounded-full p-1 bg-gradient-to-br from-blue-700 via-blue-800 to-blue-600
             shadow-2xl z-20 w-[250px] xs:w-[300px] sm:w-[350px] h-[250px] xs:h-[300px] sm:h-[350px] mx-auto'>
-                
+                <img src={bannerImage} alt="Banner" className=' rounded-full border-4 xs:border-8 border-blue-900/50
+                w-full h-full object-cover object-top'/>
+                <div className=' absolute inset-0 rounded-full bg-gradient-to-b from-transparent to-blue-900/40 mix-blend-medium' />
             </div>
+            {/* ORBITAL IMAGES */}
+            {orbitImages.map((imgSrc, index) => (
+              <div key={index} className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+                ${index === 0 ? 'orbit' : `orbit-delay-${index * 5}`}
+                w-[100px] xs:w-[150px] sm:w-[200px] h-[100px] xs:h-[150px] sm:h-[200px]`}>
+                  <img src={imgSrc} alt={`Orbiting ${index+1}`}
+                  className=' w-full h-full rounded-full border border-blue-500/30 shadow-lg bg-blue-900/20 p-1
+                  object-cover' /> </div>
+            )
+          )}
         </div>
         </div>
       </div>
