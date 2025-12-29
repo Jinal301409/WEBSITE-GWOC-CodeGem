@@ -5,6 +5,7 @@ import ContactPage from './Pages/ContactPage/ContactPage';
 import AboutPage from './Pages/AboutPage/AboutPage';
 import Cart from './Pages/Cart/Cart';
 import Services from './Pages/Services/Services';
+import SignUp from './Components/SignUp/SignUp';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Route path='/cart' element={<Cart />} />
       <Route path='/services' element={<Services />} />
       <Route path='/login' element={<Home />} />
+      <Route path='/signup' element={<SignUp />} />
     </Routes>
   );
 };
