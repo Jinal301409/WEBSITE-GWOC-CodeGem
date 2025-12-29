@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa";
  import { FaPlay } from "react-icons/fa";
  import { bannerAssets } from '../../assets/dummydata';
@@ -100,11 +100,25 @@ const Banner = () => {
                   <img src={imgSrc} alt={`Orbiting ${index+1}`}
                   className=' w-full h-full rounded-full border border-blue-500/30 shadow-lg bg-blue-900/20 p-1
                   object-cover' /> </div>
-            )
-          )}
+            ))}
         </div>
         </div>
       </div>
+      {/* VIDEO MODAL */}
+      {showVideo && (
+        <div className=' fixed inset-0 flex items-center justify-center z-50 bg-black/90 backdrop-blur-lg p-4'> 
+        <button onClick={() => setShowVideo(false)}
+        className=' absolute top-6 right-6 text-blue-400 hover:text-blue-300 text-3xl z-10 transition-all'>
+          <FaTimes />
+        </button>
+        <div className=' w-full max-w-4xl mx-auto'>
+          <video
+          controls autoPlay className=' w-full aspect-video object-contain rounded-lg shadow-2xl'>
+            <source src={video} type='video/mp4' />
+            </video> 
+            </div>
+        </div>
+      )}
     </div>
   )
 }
