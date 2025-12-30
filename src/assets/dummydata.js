@@ -12,12 +12,30 @@ import RecoveryPack from "./RecoveryPack.jpeg";
 import AthleteRecovery from "./AthleteRecovery.jpeg";
 import FirstTimeOffer from "./FirstTimeOffer.jpeg";
 import MindBodyReset from "./MindBodyReset.jpeg";
+import { FaShippingFast, FaLeaf, FaHeart } from 'react-icons/fa';
+import { FaBolt, FaRegClock, FaCalendarCheck, FaFire } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6';
+import { FiUser, FiSmartphone, FiMail, FiHome } from 'react-icons/fi';
+import { FaUtensils } from 'react-icons/fa';
+import { GiChefToque, GiFoodTruck } from 'react-icons/gi';
 
 export const bannerAssets = {
   bannerImage: BannerImage,
   orbitImages: [Image1, Image2, Image3, Image4],
   video:Video,
 };
+// ABOUT HOMEPAGE
+export const aboutfeature = [
+    { icon: FaBolt, title: "Instant Recovery", text: "Quick and effective cold & heat therapy sessions", color: "from-amber-400 to-orange-500" },
+    { icon: FaRegClock, title: "Always Available", text: "24/7 premium service", color: "from-rose-400 to-pink-600" },
+    { icon: FaCalendarCheck, title: "Exclusive Booking", text: "Easy and priority session reservations", color: "from-emerald-400 to-cyan-600" },
+    { icon: FaFire, title: "Signature Therapies", text: "Expertly curated ice, steam, and jacuzzi experiences", color: "from-purple-400 to-indigo-600" }
+];
+// SPECIAL OFFER
+export const commonTransition = "transition-all duration-300";
+export const addButtonBase ="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-2.5 rounded-xl font-bold border-2 border-blue-400/30";
+export const addButtonHover ="hover:gap-3 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 relative overflow-hidden";
+
 // TODAY'S SPECIAL OFFERS – CHILL THRIVE
 export const cardData = [
   {id: 1, title: 'Ice Bath Recovery', rating: 4.9, hearts: 320, description: 'Cold immersion therapy to reduce inflammation and boost recovery', image: IceBath, popular: true, price: 499},

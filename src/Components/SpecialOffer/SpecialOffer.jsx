@@ -1,4 +1,4 @@
-import { cardData, additionalData } from '../../assets/dummydata';
+import { cardData, additionalData, addButtonBase, addButtonHover, commonTransition } from '../../assets/dummydata';
 import React, { useState } from 'react';
 import { useCart } from '../../CartContext/CartContext'; // adjust path if needed
 import { FaStar } from 'react-icons/fa6';
@@ -9,14 +9,6 @@ const SpecialOffer = () => {
     const [showAll, setShowAll] = useState(false);
     const initialData = [...cardData, ...additionalData];
 const { addToCart, updateQuantity, removeFromCart, cartItems } = useCart();
-const addButtonBase =
-  "relative flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-white font-semibold";
-
-const addButtonHover =
-  "hover:bg-blue-700 hover:scale-105";
-
-const commonTransition =
-  "transition-all duration-300";
 
   return (
     <div className="bg-gradient-to-b from-blue-900 to-blue-800 text-white py-16 px-4 font-[Poppins]">
@@ -56,12 +48,12 @@ and perform at your best—available today at Chill Thrive.
             <div className="absolute inset-0 bg-gradient-to-b 
 from-transparent via-blue-900/40 to-blue-950/90" />
 <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center bg-blue-950/50 backdrop-blur-sm px-4 py-2 rounded-full">
-  <span className="flex items-center gap-2 text-blue-400">
+  <span className="flex items-center gap-2 text-amber-300">
     <FaStar className="text-sm drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" />
     <span className="font-bold">{item.rating}</span>
   </span>
 
-<span className=' flex items-center gap-2 text-blue-700'>
+<span className=' flex items-center gap-2 text-red-400'>
 <FaHeart className=' text-x1 animate-heartbeat' />
 <span className=' font-bold'> {item.hearts}</span>
 </span>
@@ -109,10 +101,10 @@ from-transparent via-blue-900/40 to-blue-950/90" />
     </button>
   </div>
 ) : (
-<button onClick={() => addToCart({...item, name: item.title, price: parseFloat(item.price.replace('₹', '')) }, 1)}
+<button onClick={() => addToCart({ ...item, name: item.title, price: parseFloat(item.price) }, 1)}
 className={`${addButtonBase} ${addButtonHover} ${commonTransition}`}>
-  <div className=' absolute inset-0 bg-gradient-to-r from-blue-500/20 to-transparent
-opacity-0 hover:opacity-100 transition-opacity duration-300'/>
+  <div className='absolute inset-0 bg-gradient-to-r from-blue-500/20 to-transparent
+opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none'/>
 <FaPlus className=' text-lg transition-transform' />
 <span className=' relative z-10'>Add</span>
 </button>
@@ -140,6 +132,8 @@ group-hover:border-blue-500/30 transition-all duration-500'/>
     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-transparent to-blue-500/10
       opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
     <FaFire className="text-xl animate-pulse" />
+    <span> {showAll ? 'Show Less' : 'Show More'}</span>
+    <div className=' h-full w-1 bg-blue-400/30 absolute right-0 top-0 group-hover:animate-border-pulse'/>
   </button>
 </div>
 
