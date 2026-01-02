@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { features, stats, teamMembers } from '../../assets/dummydata'
+import { features, stats, teamMembers } from '../../assets/stats.js'
 
 const About = () => {
 
@@ -35,8 +35,9 @@ const About = () => {
                             border border-blue-500/50 hover:border-blue-800 transition-all duration-300 h-full">
                                <div>
                                  <motion.img src={f.img} alt={f.img} className=" w-full h-full object-cover">
-                                 initial={{ scale: 1 }} whileHover={{ scale: 1.05 }} transition={{ duration: 0.4 }}>
-                                 </motion.img>                               </div>
+                                 initial={{ scale: 1 }} whileHover={{ scale: 1.05 }} transition={{ duration: 0.4 }}
+                                 </motion.img>                              
+                                  </div>
                             </div>
                           </motion.div>
                         
