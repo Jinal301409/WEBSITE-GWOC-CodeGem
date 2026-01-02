@@ -61,6 +61,18 @@ const OurHomeMenu = () => {
   <p className='text-blue-100/80'>
     {item.description}
   </p>
+  <p className='text-blue-200/70 mt-2 text-sm font-cinzel'>
+  ⏱ Duration: {item.duration}
+</p>
+
+<ul className='mt-3 space-y-1 text-blue-100/80 text-sm'>
+  {item.benefits?.map((benefit, index) => (
+    <li key={index} className='flex items-center gap-2'>
+      <span className='text-cyan-400'>✔</span>
+      {benefit}
+    </li>
+  ))}
+</ul>
   <div className=' mt-auto flex items-center gap-4 justify-between'>
   <div className=' bg-blue-100/10 backdrop-blur-sm px-3 py-1 rounded-2xl shadow-lg'>
     <span className=' text-xl font-bold text-cyan-300 font-dancingscript'>
