@@ -10,12 +10,12 @@
 @keyframes cardEntrance {
   0% {
     opacity: 0;
-    transform: translateY(30px) scale(0.95);
+    transform: translateY(30px) rotate(-2deg);
   }
 
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0) rotate(0);
   }
 }
 .grid > div {
@@ -24,12 +24,25 @@
   animation-delay: calc(var(--index) * 0.1s);
 }
 
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
-  background: #e6f2ff; /* light blue / white background */
+  background: #0f172a; /* deep blue */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #4da3ff, #1e6fd9); /* blue gradient */
+  background: linear-gradient(
+    45deg,
+    #38bdf8, /* sky blue */
+    #1e40af  /* royal blue */
+  );
   border-radius: 4px;
+}
+
+/* Text clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

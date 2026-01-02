@@ -2,18 +2,17 @@ import React, { useState } from 'react'
 import { useCart } from '../../CartContext/CartContext'
 import { dummyMenuData } from '../../assets/OmhDD'
 import { FaMinus, FaPlus, FaArrowRight } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
-import './OurHomeMenu.css'
+import './OurMenu.css'
 const categories = ['Ice Bath Therapy', 'Jacuzzi Therapy', 'Steam Therapy', 'Combo Packages']
-const OurHomeMenu = () => {
-    const [activeCategory, setActiveCategory] = useState(categories[0]);
-    const displayItems = (dummyMenuData[activeCategory] || []).slice(0, 4);
-  const { cartItems, addToCart, removeFromCart, updateQuantity } = useCart()
-  const getQuantity = id => (cartItems.find(i=> i.id === id) ?.quantity || 0)
-  return (
+const OurMenu = () => {
+     const [activeCategory, setActiveCategory] = useState(categories[0]);
+        const displayItems = (dummyMenuData[activeCategory] || []).slice(0, 12);
+      const { cartItems, addToCart, removeFromCart, updateQuantity } = useCart()
+      const getQuantity = id => (cartItems.find(i=> i.id === id) ?.quantity || 0)
+ return (
     <div className="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#1e40af] min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-center mb-12 bg-clip-text text-transparent
+        <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mb-12 bg-clip-text text-transparent
           bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-600">
           <span className="font-dancingscript block text-5xl sm:text-6xl md:text-7xl mb-2">
             Our Exquisite Therapy Menu
@@ -114,20 +113,10 @@ const OurHomeMenu = () => {
       </div>
     );
   })}
-</div>
-<div className='flex justify-center mt-16'>
-  <Link 
-    className='bg-blue-900/30 border-2 [border-blue-800/30] sm:px-10 py-3 rounded-full font-cinzel uppercase tracking-widest transition-all duration-300
-    hover:bg-blue-800/40 hover:text-white hover:scale-105 hover:shadow-lg hover:shadow-blue-900/20 backdrop-blur-sm px-8 text-white' 
-    to='/menu'
-  >
-    Explore Full Menu
-  </Link>
-</div>
-
+        </div>
       </div>
     </div>
   )
 }
 
-export default OurHomeMenu
+export default OurMenu
