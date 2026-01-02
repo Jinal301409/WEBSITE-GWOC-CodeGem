@@ -39,8 +39,8 @@ export const addButtonHover ="hover:gap-3 hover:shadow-lg hover:shadow-blue-500/
 // TODAY'S SPECIAL OFFERS – CHILL THRIVE
 export const cardData = [
   {id: 1, title: 'Ice Bath Recovery', rating: 4.9, hearts: 320, description: 'Cold immersion therapy to reduce inflammation and boost recovery', image: IceBath, popular: true, price: 499},
-  {id: 2, title: 'Steam Detox Session', rating: 4.8, hearts: 280, description: 'Deep heat therapy for detoxification, relaxation, and circulation', image: SteamBath, bestseller: true, price: 399},
-  {id: 3, title: 'Jacuzzi Relaxation', rating: 4.7, hearts: 245, description: 'Hydrotherapy session for muscle relaxation and stress relief', image: Jacuzzi, price: 599},
+  {id: 2, title: 'Steam Recovery Therapy', rating: 4.8, hearts: 280, description: 'Deep heat therapy for detoxification, relaxation, and circulation', image: SteamBath, bestseller: true, price: 399},
+  {id: 3, title: 'Jacuzzi Relaxation Therapy', rating: 4.7, hearts: 245, description: 'Hydrotherapy session for muscle relaxation and stress relief', image: Jacuzzi, price: 599},
   {id: 4, title: 'Cold + Heat Therapy Combo', rating: 5.0, hearts: 410, description: 'Contrast therapy combining ice bath and steam for maximum recovery', image: ContrastTherapy, special: true, price: 799}
 ];
 export const additionalData = [

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { FaBath } from "react-icons/fa6"; 
+import { FaBath, FaFirefox } from "react-icons/fa6"; 
 import { NavLink } from 'react-router-dom'; 
-import { FiHome, FiBook, FiPhone, FiStar, FiShoppingCart, FiLogOut, FiKey,  } from "react-icons/fi";
+import { FiHome, FiBook, FiPhone, FiStar, FiShoppingCart, FiLogOut, FiKey, FiImage } from "react-icons/fi";
 import { useCart } from '../../CartContext/CartContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -82,6 +82,8 @@ const renderMobileAuthButton = () => {
     {name: 'Home', to: '/', icon: <FiHome />},
     {name: 'Services', to: '/services', icon: <FiBook />},
     {name: 'About', to: '/about', icon: <FiStar />},
+    {name: 'Awareness Page', to: '/aware', icon: <FaFirefox />},
+    {name: 'Photo Gallary/Events', to: '/photo', icon: <FiImage />},
     {name: 'Contact', to: '/contact', icon: <FiPhone />},
 ];
   return ( 

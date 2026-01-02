@@ -6,6 +6,8 @@ import AboutPage from './Pages/AboutPage/AboutPage';
 import Cart from './Pages/Cart/Cart';
 import Services from './Pages/Services/Services';
 import SignUp from './Components/SignUp/SignUp';
+import AwarenessPage from './Pages/AwarenessPage/AwarenessPage';
+import Events from './Pages/Events/Events';
 
 const App = () => {
   return (
@@ -17,6 +19,8 @@ const App = () => {
       <Route path='/services' element={<Services />} />
       <Route path='/login' element={<Home />} />
       <Route path='/signup' element={<SignUp />} />
+      <Route path='/aware' element={<AwarenessPage />} />
+      <Route path='/photo' element={<Events />} />
     </Routes>
   );
 };
