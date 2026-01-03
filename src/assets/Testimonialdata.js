@@ -1,4 +1,7 @@
-const testimonials = [
+import Testiminial1 from './Testimonial1.mp4';
+import Testimonial2 from './Testimonial2.mp4';
+import Testimonial3 from './Testimonial3.MOV';
+export const testimonials = [
   {
     id: 1,
     name: "Pankti Shah",
@@ -28,5 +31,24 @@ const testimonials = [
     car: "Full Recovery Combo",
   },
 ];
+export const videoTestimonials = [
+  {
+    id: 1,
+    name: "Akanksha Desai",
+    role: "Choreographer and Fitness Fits",
+    video: Testiminial1, // or imported video
+  },
+  {
+    id: 2,
+    name: "Customer",
+    role: "-",
+    video: Testimonial2,
+  },
+  {
+    id: 3,
+    name: "Hasti",
+    role: "Student",
+    video: Testimonial3,
+  },
+];
 
-export default testimonials;

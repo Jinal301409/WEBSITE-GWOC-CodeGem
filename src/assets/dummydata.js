@@ -12,18 +12,109 @@ import RecoveryPack from "./RecoveryPack.jpeg";
 import AthleteRecovery from "./AthleteRecovery.jpeg";
 import FirstTimeOffer from "./FirstTimeOffer.jpeg";
 import MindBodyReset from "./MindBodyReset.jpeg";
-import { FaShippingFast, FaLeaf, FaHeart } from 'react-icons/fa';
+import IA1 from './IA1.jpg';
+import IA2 from './IA2.jpg';
+import IA3 from './IA3.jpg';
+import { FaSpa, FaUserCheck } from 'react-icons/fa';
+import { GiChefToque, GiFoodTruck } from 'react-icons/gi';
+import { FaSnowflake, FaHeart, FaUsers, FaStar } from "react-icons/fa";
 import { FaBolt, FaRegClock, FaCalendarCheck, FaFire } from 'react-icons/fa';
 import { FaFacebook, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6';
 import { FiUser, FiSmartphone, FiMail, FiHome } from 'react-icons/fi';
 import { FaUtensils } from 'react-icons/fa';
-import { GiChefToque, GiFoodTruck } from 'react-icons/gi';
-
 export const bannerAssets = {
   bannerImage: BannerImage,
   orbitImages: [Image1, Image2, Image3, Image4],
   video:Video,
 };
+// ABOUT PAGE
+export const features = [
+    {
+        id: 1,
+        title: "Contrast Therapy",
+        text: "Powerful recovery through ice baths, steam, and heat contrast for faster muscle repair and resilience.",
+        icon: FaSnowflake, // store the component reference
+        img: IA1,
+    },
+    {
+        id: 2,
+        title: "Expert Guided Recovery",
+        text: "Professionally guided sessions ensuring safety, optimal temperature control, and maximum benefits.",
+        icon: FaUserCheck,
+        img: IA2,
+    },
+    {
+        id: 3,
+        title: "Premium Wellness Standards",
+        text: "Hygienic facilities, purified water, and carefully maintained recovery environments.",
+        icon: FaSpa,
+        img: IA3,
+    },
+];
+
+export const stats = [
+  {
+    label: "Happy Clients",
+    value: "5,000+",
+    icon: FaUsers,
+  },
+  {
+    label: "Ice Bath Sessions",
+    value: "1,200+",
+    icon: FaSnowflake,
+  },
+  {
+    label: "Satisfaction",
+    value: "98%",
+    icon: FaHeart,
+  },
+  {
+    label: "5-Star Reviews",
+    value: "4.9/5",
+    icon: FaStar,
+  },
+];
+// export const teamMembers = [
+//     {
+//         name: "Marco Yansen",
+//         role: "Executive Chef",
+//         img: IA4,
+//         bio: "3 Michelin stars | Italian cuisine specialist",
+//         delay: 0.1,
+//         social: {
+//             twitter: "https://x.com/?lang=en",
+//             instagram: "https://www.instagram.com/",
+//             facebook: "https://www.facebook.com/",
+//             linkedin: "https://www.linkedin.com/",
+//         },
+//     },
+//     {
+//         name: "Amit Singh",
+//         role: "Pastry Chef",
+//         img: IA5,
+//         bio: "World Baking Champion | French desserts expert",
+//         delay: 0.3,
+//         social: {
+//             twitter: "https://x.com/?lang=en",
+//             instagram: "https://www.instagram.com/",
+//             facebook: "https://www.facebook.com/",
+//             linkedin: "https://www.linkedin.com/",
+//         },
+//     },
+//     {
+//         name: "Akash Trivedi",
+//         role: "Sushi Chef",
+//         img: IA6,
+//         bio: "5th generation sushi chef | Traditional techniques",
+//         delay: 0.5,
+//         social: {
+//             twitter: "https://x.com/?lang=en",
+//             instagram: "https://www.instagram.com/",
+//             facebook: "https://www.facebook.com/",
+//             linkedin: "https://www.linkedin.com/",
+//         },
+//     },
+// ];
 // ABOUT HOMEPAGE
 export const aboutfeature = [
     { icon: FaBolt, title: "Instant Recovery", text: "Quick and effective cold & heat therapy sessions", color: "from-amber-400 to-orange-500" },
@@ -53,3 +144,4 @@ export const additionalData = [
 // LOGIN 
 export const inputBase = "w-full rounded-lg bg-white text-gray-800 placeholder-gray-400 border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm focus:shadow-md hover:border-blue-400 transition-all";
 export const iconClass = "absolute top-1/2 transform -translate-y-1/2 left-3 text-blue-500 hover:border-blue-400 transition-all shadow-sm focus:shadow-md";
+export default stats;

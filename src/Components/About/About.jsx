@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { motion } from 'framer-motion'
-import { features, stats, teamMembers } from '../../assets/stats.js'
+import { features } from '../../assets/dummydata'
+import chillThriveImg from '../../assets/ChillThrive.jpg';
 
 const About = () => {
 
@@ -31,13 +32,34 @@ const About = () => {
                           transition={{delay: i * 0.2 }} className=" relative group">
                             <div className=" absolute -inset-1 bg-gradient-to-br from-blue-500/30 to-blue-100/30 rounded-3xl
                             blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-full h-full"/>
-                            <div className=" relative bg-blue-100 backdrop-blur-lg rounded-3xl overflow-hidden
-                            border border-blue-500/50 hover:border-blue-800 transition-all duration-300 h-full">
-                               <div>
-                                 <motion.img src={f.img} alt={f.img} className=" w-full h-full object-cover">
-                                 initial={{ scale: 1 }} whileHover={{ scale: 1.05 }} transition={{ duration: 0.4 }}
-                                 </motion.img>                              
+                            <div className=" relative bg-blue-300 backdrop-blur-lg rounded-3xl overflow-hidden
+                            border border-blue-900/50 hover:border-blue-800 transition-all duration-300 h-full">
+                               <div className="h-50 sm:h-60 md:h-68 overflow-hidden">
+                                 <motion.img 
+                                 src={f.img} 
+                                 alt={f.title} 
+                                 className=" w-full h-full object-cover" 
+                                 initial={{ scale: 1 }} 
+                                 whileHover={{ scale: 1.05 }} 
+                                 transition={{ duration: 0.4 }}/> 
                                   </div>
+                                  <div className="p-8 to-blue-600">
+  <motion.div
+    className="text-blue-900 mb-4 inline-block"
+    whileHover={{ rotate: 15 }}
+  >
+    <Icon className="w-12 h-12" />
+  </motion.div>
+
+  <h3 className="text-2xl font-bold mb-2 text-white">
+    {f.title}
+  </h3>
+
+  <p className="text-blue-900/80">
+    {f.text}
+  </p>
+</div>
+
                             </div>
                           </motion.div>
                         
@@ -45,6 +67,145 @@ const About = () => {
                 })}
             </div>
         </section>
+        {/* ABOUT CHILL THRIVE – ANIMATED BACKGROUND */}
+<section className="relative py-24 px-6 md:px-12 overflow-hidden">
+  
+  {/* Animated Background Image */}
+  <motion.div
+    className="absolute inset-0 bg-cover bg-center"
+    style={{
+      backgroundImage:`url(${chillThriveImg})`,
+    }}
+    initial={{ scale: 1.1, x: 0 }}
+    animate={{ scale: 1.15, x: -30 }}
+    transition={{
+      duration: 20,
+      repeat: Infinity,
+      repeatType: "reverse",
+      ease: "easeInOut",
+    }}
+  />
+
+  {/* Dark Blue Overlay */}
+<div className="absolute inset-0 bg-gradient-to-br from-blue-950/50 via-blue-900/40 to-blue-700/30" />
+
+
+
+
+  {/* Content */}
+  <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+    
+    {/* LEFT TEXT */}
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+    >
+      <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+        DIVE INTO THE <span className="text-blue-400">CHILL THRIVE EXPERIENCE!</span>
+      </h2>
+
+      <p className="text-blue-200 text-lg leading-relaxed mb-4">
+        Looking for the ultimate recovery, wellness, and mental boost? Our ice baths are designed to help you recharge, 
+        refresh, and revive! Whether you're an athlete, fitness enthusiast, 
+        or just looking for a new way to challenge yourself, we offer:
+      </p>
+
+      <p className="text-blue-200 text-lg leading-relaxed mb-4">
+        🔥 More than just an ice bath!     <br />  
+        🎶 Good Vibes & Chill Community 🎵<br/>
+🏋️‍♂️ Perfect for Athletes & Fitness Lovers 🏃‍♂️ <br />
+🧘‍♂️ Holistic Wellness & Mindfulness 🕉️
+
+      </p>
+
+      {/* 👇 YOUR CONTENT ADDED HERE */}
+      <p className="text-blue-300 text-lg leading-relaxed">
+       📍 Visit Us At: CHILLTHRIVE, AT  Samavesh Aqua Therapy Centre Plot no - 3 ,opp  live stream cafe , beside indianbank, SD jain school lane, vesu , Surat <br />
+📞 Call/WhatsApp: 9227025160 <br />
+📩 DM us to book your session! <br />
+🚚 Memberships & Packages Available <br />
+👥 TAG A FRIEND & CHALLENGE THEM TO JOIN YOU! <br />
+
+#Chillthrive #IceBathTherapy #ColdPlunge #Recovery #BoostYourEnergy ⚡ #MindOverMatter #WellnessJourney 🧘‍♂️ #ColdExposure 🧊 #WimHofMethod 🌬️ #MentalToughness 💪 #IceBathBenefits #SelfCare 💖 #AthleteRecovery 🏋️‍♂️ #StressRelief 😌 #BodyMindSoul ✨ #PeakPerformance 🎯 #Biohacking 🔬 #NaturalHealing 🌱 #StrongerEveryDay 💪🔥 #Surat #Pune #FitnessRecovery #HolisticHealing 🕉️ #WellnessWarrior 🏆 #ChillAndThrive ❄️ #ColdWaterChallenge
+      </p>
+    </motion.div>
+
+    {/* RIGHT GLASS CARD */}
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: 0.1 }}
+      className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-10"
+    >
+     <ul className="space-y-6 text-cyan-300 max-w-xl mx-auto">
+  <li className="flex items-start gap-3 group hover:bg-cyan-900/20 p-4 rounded-lg transition-all duration-300">
+    <span className="text-2xl">💪🧊</span>
+    <div>
+      <h3 className="font-semibold text-lg group-hover:text-white">
+        Faster Muscle Recovery
+      </h3>
+      <p className="text-cyan-200">
+        Reduce soreness & inflammation
+      </p>
+    </div>
+  </li>
+
+  <li className="flex items-start gap-3 group hover:bg-cyan-900/20 p-4 rounded-lg transition-all duration-300">
+    <span className="text-2xl">🦠🛡️</span>
+    <div>
+      <h3 className="font-semibold text-lg group-hover:text-white">
+        Boosted Immunity
+      </h3>
+      <p className="text-cyan-200">
+        Strengthen your body's defense system
+      </p>
+    </div>
+  </li>
+
+  <li className="flex items-start gap-3 group hover:bg-cyan-900/20 p-4 rounded-lg transition-all duration-300">
+    <span className="text-2xl">🧠✨</span>
+    <div>
+      <h3 className="font-semibold text-lg group-hover:text-white">
+        Enhanced Mental Clarity
+      </h3>
+      <p className="text-cyan-200">
+        Improve focus & resilience
+      </p>
+    </div>
+  </li>
+
+  <li className="flex items-start gap-3 group hover:bg-cyan-900/20 p-4 rounded-lg transition-all duration-300">
+    <span className="text-2xl">😌💆‍♂️</span>
+    <div>
+      <h3 className="font-semibold text-lg group-hover:text-white">
+        Stress & Anxiety Relief
+      </h3>
+      <p className="text-cyan-200">
+        Feel calmer and more balanced
+      </p>
+    </div>
+  </li>
+
+  <li className="flex items-start gap-3 group hover:bg-cyan-900/20 p-4 rounded-lg transition-all duration-300">
+    <span className="text-2xl">😴⚡</span>
+    <div>
+      <h3 className="font-semibold text-lg group-hover:text-white">
+        Better Sleep & Energy Levels
+      </h3>
+      <p className="text-cyan-200">
+        Wake up feeling refreshed
+      </p>
+    </div>
+  </li>
+</ul>
+
+    </motion.div>
+  </div>
+</section>
+
     </div>
   )
 }

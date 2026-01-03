@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion';
-import stats from '../../assets/stats'
+import stats from '../../assets/dummydata'
 const RateSection = () => {
     const [hoveredStat, setHoveredStat] = useState(null);
   return (

@@ -1,9 +1,12 @@
-import React from "react";
+import React,  { useState, useRef } from "react";
 import { testimonialStyles as styles } from "../../assets/dummyStyles";
-import testimonials from "../../assets/Testimonialdata";
+import { testimonials, videoTestimonials} from "../../assets/Testimonialdata";
 import { FaBook, FaQuoteLeft, FaStar } from "react-icons/fa";
 import { MdMessage } from "react-icons/md";
+import { FaPlayCircle } from "react-icons/fa";
 const Testimonial = () => {
+  const [playingVideoId, setPlayingVideoId] = useState(null);
+
   return (
     <div className={styles.container}>
       <div className={styles.innerContainer}>
@@ -95,6 +98,56 @@ const Testimonial = () => {
     );
   })}
 </div>
+{/* VIDEO TESTIMONIALS */}
+<div className="mt-24">
+  <h2 className="text-4xl font-bold text-center text-white mb-6">
+    Real <span className="text-blue-400">Video</span> Experiences
+  </h2>
+
+  <p className="text-center text-blue-200 mb-12">
+    Watch how Chill Thrive transformed their recovery journey
+  </p>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+    {videoTestimonials.map((v) => (
+      <div
+        key={v.id}
+        className="relative bg-white/10 backdrop-blur-xl border border-blue-400/30 
+                   rounded-3xl overflow-hidden shadow-xl group"
+      >
+        {/* VIDEO */}
+        <video
+          src={v.video}
+          controls
+          playsInline
+          preload="metadata"
+          className="w-full h-64 object-cover"
+          onPlay={() => setPlayingVideoId(v.id)}
+    onPause={() => setPlayingVideoId(null)}
+    onEnded={() => setPlayingVideoId(null)}
+        />
+
+        {/* Overlay Play Effect */}
+         {playingVideoId !== v.id && (
+        <div className="absolute inset-0 flex items-center justify-center 
+                        bg-black/20 opacity-0 group-hover:opacity-100 
+                        transition duration-300 pointer-events-none">
+          <FaPlayCircle className="text-white text-6xl" />
+        </div>
+         )}
+
+        {/* INFO */}
+        <div className="p-6 text-center">
+          <h3 className="text-xl font-semibold text-white">
+            {v.name}
+          </h3>
+          <p className="text-blue-300">{v.role}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
       </div>
     </div>
   );
