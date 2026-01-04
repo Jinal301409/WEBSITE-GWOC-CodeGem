@@ -8,6 +8,7 @@ import Services from './Pages/Services/Services';
 import SignUp from './Components/SignUp/SignUp';
 import AwarenessPage from './Pages/AwarenessPage/AwarenessPage';
 import Events from './Pages/Events/Events';
+import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
 
 const App = () => {
   return (
@@ -15,12 +16,16 @@ const App = () => {
       <Route path='/' element={<Home />} />
       <Route path='/contact' element={<ContactPage />} />
       <Route path='/about' element={<AboutPage />} />
-      <Route path='/cart' element={<Cart />} />
       <Route path='/services' element={<Services />} />
       <Route path='/login' element={<Home />} />
       <Route path='/signup' element={<SignUp />} />
       <Route path='/aware' element={<AwarenessPage />} />
       <Route path='/photo' element={<Events />} />
+      <Route path='/cart' element={
+        <PrivateRoute>
+        <Cart />
+        </PrivateRoute>
+      } />
     </Routes>
   );
 };

@@ -131,12 +131,12 @@ required>
 </textarea>
 </div>
 </div>
-<button type='submit' className=' w-full bg-gradient-to-r from-blue-600 to-blue-700 hover: from-blue-600
+<button type='submit' className=' w-full flex items-center bg-gradient-to-r from-blue-600 to-blue-700 hover: from-blue-600
 hover: to-blue-700 text-white font-semibold py-3 ppx6
 rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover: shadow-blue-900
 justify-center space-x-2 group'>
 <span>Submit Query</span>
-<FiArrowRight className=' w-5 h-5 group-hover: translate-x-1 transition-transform'/>
+<FiArrowRight className=' w-5 h-5 group-hover: translate-x-l transition-transform'/>
 </button>
 </form>
 </div>
