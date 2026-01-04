@@ -15,7 +15,7 @@ import MindBodyReset from "./MindBodyReset.jpeg";
 import IA1 from './IA1.jpg';
 import IA2 from './IA2.jpg';
 import IA3 from './IA3.jpg';
-import { FaSpa, FaUserCheck } from 'react-icons/fa';
+import { FaServer, FaServicestack, FaSpa, FaUserCheck } from 'react-icons/fa';
 import { GiChefToque, GiFoodTruck } from 'react-icons/gi';
 import { FaSnowflake, FaHeart, FaUsers, FaStar } from "react-icons/fa";
 import { FaBolt, FaRegClock, FaCalendarCheck, FaFire } from 'react-icons/fa';
@@ -139,6 +139,14 @@ export const additionalData = [
   {id: 6, title: 'Athlete Performance Session', rating: 4.9, hearts: 360, description: 'High-performance recovery designed for athletes and fitness enthusiasts', image: AthleteRecovery, price: 1199},
   {id: 7, title: 'First-Time Chill Offer', rating: 4.6, hearts: 290, description: 'Exclusive discounted recovery session for first-time visitors', image: FirstTimeOffer, price: 349},
   {id: 8, title: 'Mind & Body Reset', rating: 4.8, hearts: 405, description: 'A calming blend of steam and jacuzzi therapy for mental relaxation', image: MindBodyReset, special: true, price: 699}
+];
+// CONTACT
+export const contactFormFields = [
+    { label: 'Full Name', name: 'name', type: 'text', placeholder: 'Enter your full name', Icon: FiUser },
+    { label: 'Phone Number', name: 'phone', type: 'tel', placeholder: '+91 12345 67890', pattern: "[+]{0,1}[0-9]{10,13}", Icon: FiSmartphone },
+    { label: 'Email Address', name: 'email', type: 'email', placeholder: 'your.email@example.com', Icon: FiMail },
+    { label: 'Address', name: 'address', type: 'text', placeholder: 'Enter your delivery address', Icon: FiHome },
+    { label: 'Service Name', name: 'service', type: 'text', placeholder: 'Enter service name (e.g., Ice Bath)', Icon: FaServer },
 ];
 
 // LOGIN 

@@ -54,7 +54,7 @@ from-transparent via-blue-900/40 to-blue-950/90" />
   </span>
 
 <span className=' flex items-center gap-2 text-red-400'>
-<FaHeart className=' text-x1 animate-heartbeat' />
+<FaHeart className=' text-xl animate-heartbeat' />
 <span className=' font-bold'> {item.hearts}</span>
 </span>
 </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useCart } from '../../CartContext/CartContext';
-import { FaMinus, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaMinus, FaPlus, FaTimes, FaTrash } from 'react-icons/fa';
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity} = useCart();
@@ -134,14 +134,18 @@ const CartPage = () => {
       {selectedImage && (
   <div
     className='fixed inset-0 z-50 flex items-center justify-center bg-amber-900/40 bg-opacity-75 backdrop-blur p-4 overflow-auto'
-    onClick={() => setSelectedImage(null)}
-  >
+    onClick={() => setSelectedImage(null)}>
     <div className='relative max-w-full max-h-full'>
       <img
         src={selectedImage}
         alt='Full View'
-        className='object-contain max-w-[90vw] max-h-[90vh] rounded-lg'
-      />
+        className='object-contain max-w-[90vw] max-h-[90vh] rounded-lg'/>
+        <button onClick={() => setSelectedImage(null)} 
+className=' absolute top-1 right-1 bg-blue-900/80 rounded-full p-2 text-white
+duration-200 active: scale-90 hover:bg-blue-700'>
+  <FaTimes className='w-6 h-6' />
+</button>
+
     </div>
   </div>
 )}
