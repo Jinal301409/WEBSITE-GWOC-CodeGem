@@ -1,21 +1,40 @@
 import React from "react";
+import bb1 from "../assets/blackbunny1.png";
+import bb2 from "../assets/blackbunny2.png";
+import bb3 from "../assets/blackbunny3.png";
+import bb4 from "../assets/blackbunny4.png";
+import bb5 from "../assets/blackbunny5.png";
+import bb6 from "../assets/blackbunny6.png";
+
+/*import fs1 from "../assets/events/funstreet1.jpg";
+import fs2 from "../assets/events/funstreet2.jpg";
+import fs3 from "../assets/events/funstreet3.jpg";
+import fs4 from "../assets/events/funstreet4.jpg";
+import fs5 from "../assets/events/funstreet5.jpg";
+import fs6 from "../assets/events/funstreet6.jpg";
+
+import tf1 from "../assets/events/theeflea1.jpg";
+import tf2 from "../assets/events/theeflea2.jpg";
+import tf3 from "../assets/events/theeflea3.jpg";
+import tf4 from "../assets/events/theeflea4.jpg";
+import tf5 from "../assets/events/theeflea5.jpg";
+import tf6 from "../assets/events/theeflea6.jpg";
+
+import sp1 from "../assets/events/special1.jpg";
+import sp2 from "../assets/events/special2.jpg";
+import sp3 from "../assets/events/special3.jpg";
+import sp4 from "../assets/events/special4.jpg";
+import sp5 from "../assets/events/special5.jpg";
+import sp6 from "../assets/events/special6.jpg"; */
 
 const photos = [
-  "/assets/events/event1.jpg",
-  "/assets/events/event2.jpg",
-  "/assets/events/event3.jpg",
-  "/assets/events/event4.jpg",
-  "/assets/events/event5.jpg",
-  "/assets/events/event6.jpg",
-  "/assets/events/event7.jpg",
-  "/assets/events/event8.jpg",
-  "/assets/events/event9.jpg",
-  "/assets/events/event10.jpg",
-  "/assets/events/event11.jpg",
-  "/assets/events/event12.jpg",
-  "/assets/events/event13.jpg",
-  "/assets/events/event14.jpg",
-  "/assets/events/event15.jpg",
+ bb1, bb2, bb3, bb4, bb5, bb6,
+  fs1, fs2, fs3, fs4, fs5, fs6,
+  tf1, tf2, tf3, tf4, tf5, tf6,
+  sp1, sp2, sp3, sp4, sp5, sp6,
+  
+
+
   // you can add more up to 20+
 ];
 

@@ -1,6 +1,32 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import bb1 from "../../assets/bb1.png";
+import bb2 from "../../assets/bb2.png";
+import bb3 from "../../assets/bb3.png";
+import bb4 from "../../assets/bb4.png";
+import bb5 from "../../assets/bb5.png";
+import bb6 from "../../assets/bb6.png";
 
+/* import fs1 from "../../assets/funstreet1.jpg";
+import fs2 from "../../assets/funstreet2.jpg";
+import fs3 from "../../assets/funstreet3.jpg";
+import fs4 from "../../assets/funstreet4.jpg";
+import fs5 from "../../assets/funstreet5.jpg";
+import fs6 from "../../assets/funstreet6.jpg";
+
+import tf1 from "../assets/events/theeflea1.jpg";
+import tf2 from "../assets/events/theeflea2.jpg";
+import tf3 from "../assets/events/theeflea3.jpg";
+import tf4 from "../assets/events/theeflea4.jpg";
+import tf5 from "../assets/events/theeflea5.jpg";
+import tf6 from "../assets/events/theeflea6.jpg";
+
+import sp1 from "../assets/events/special1.jpg";
+import sp2 from "../assets/events/special2.jpg";
+import sp3 from "../assets/events/special3.jpg";
+import sp4 from "../assets/events/special4.jpg";
+import sp5 from "../assets/events/special5.jpg";
+import sp6 from "../assets/events/special6.jpg"; */
 const eventsData = [
   {
     id: 1,
@@ -8,26 +34,16 @@ const eventsData = [
     description:
       "Black Bunny is a high-energy themed event focused on immersive fun, creative experiences, and vibrant social engagement.",
     images: [
-      "/images/blackbunny1.jpg",
-      "/images/blackbunny2.jpg",
-      "/images/blackbunny3.jpg",
-      "/images/blackbunny4.jpg",
-      "/images/blackbunny5.jpg",
-      "/images/blackbunny6.jpg",
-    ],
+    bb1, bb2, bb3, bb4, bb5, bb6
+    ]
   },
-  {
+  /*{
     id: 2,
     title: "Funstreet",
     description:
       "Funstreet is all about joy, games, and interactive entertainment that creates unforgettable shared memories.",
     images: [
-      "/images/funstreet1.jpg",
-      "/images/funstreet2.jpg",
-      "/images/funstreet3.jpg",
-      "/images/funstreet4.jpg",
-      "/images/funstreet5.jpg",
-      "/images/funstreet6.jpg",
+    fs1, fs2, fs3, fs4, fs5, fs6
     ],
   },
   {
@@ -36,12 +52,7 @@ const eventsData = [
     description:
       "Thee Flea is a creative flea-market-style event celebrating local brands, art, culture, and discovery.",
     images: [
-      "/images/theeflea1.jpg",
-      "/images/theeflea2.jpg",
-      "/images/theeflea3.jpg",
-      "/images/theeflea4.jpg",
-      "/images/theeflea5.jpg",
-      "/images/theeflea6.jpg",
+   tf1, tf2, tf3, tf4, tf5, tf6
     ],
   },
   {
@@ -50,14 +61,9 @@ const eventsData = [
     description:
       "A premium curated showcase highlighting unique experiences, performances, and signature moments.",
     images: [
-      "/images/special1.jpg",
-      "/images/special2.jpg",
-      "/images/special3.jpg",
-      "/images/special4.jpg",
-      "/images/special5.jpg",
-      "/images/special6.jpg",
+    sp1, sp2, sp3, sp4, sp5, sp6
     ],
-  },
+  },*/
 ];
 
 const Events = () => {
