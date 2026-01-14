@@ -1,0 +1,51 @@
+import itemlodal from "../modals/itemModal.js";
+
+export const createItem = async (req, res, next)=>{
+    try {
+        const { name, description, category, price, rating, hearts }=req.body;
+        const imageUrl = req.file ?'/uploads/'+(req.file.filename):'';
+
+        const total = Number(price)*1;
+        const newItem = new itemModal({
+
+            name,
+            description,
+            category,
+            price, 
+            rating,
+            hearts,
+            imageUrl, 
+            total
+        });
+
+        const saved = await newItem.save();
+        res.status(201).json(saved)
+    }
+    catch (err) {
+        if(err.code == 11000) {
+            res.status(400).json({ message: "Item name already exists" })
+        }
+    }
+}
+
+//GET FUNCTION TO GET ALL ITEMS
+export const getItems = async (req, res, next) => {
+  try {
+    const items = await itemModal.find().sort({ createdAt: -1 });
+    res.status(200).json(items);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// DELETE FUNCTION TO DELETE ITEMS
+export const deleteItem = async (req, res, next) => {
+    try {
+        const removed = await itemModal.findByIdAndDelete(req.params.id);
+        if(!removed) return res.status(404).json({ message: "Item not found" })
+        res.status(204).end()
+    } catch (err) {
+        next(err);
+    }
+}
