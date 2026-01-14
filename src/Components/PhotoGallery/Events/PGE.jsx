@@ -28,11 +28,11 @@ import sp5 from "../assets/events/special5.jpg";
 import sp6 from "../assets/events/special6.jpg"; */
 
 const photos = [
- bb1, bb2, bb3, bb4, bb5, bb6,
+  bb1, bb2, bb3, bb4, bb5, bb6,
   fs1, fs2, fs3, fs4, fs5, fs6,
   tf1, tf2, tf3, tf4, tf5, tf6,
   sp1, sp2, sp3, sp4, sp5, sp6,
-  
+
 
 
   // you can add more up to 20+

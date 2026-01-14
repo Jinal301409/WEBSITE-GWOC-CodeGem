@@ -47,33 +47,33 @@ Scientifically proven effects:
     content: `Cold Therapy is ideal for reducing inflammation, swelling, and muscle soreness, especially after intense workouts. Heat Therapy, such as steam baths and jacuzzis, helps relax muscles, improve flexibility, and relieve stiffness.
 
 For best results, Chill Thrive recommends combination therapy using both cold and heat for full-body recovery.`,
-table: [
-    {
-      aspect: "Best For",
-      cold: "Inflammation, swelling, soreness",
-      heat: "Muscle stiffness, relaxation",
-    },
-    {
-      aspect: "Blood Flow",
-      cold: "Reduces initially, increases post-session",
-      heat: "Increases immediately",
-    },
-    {
-      aspect: "Recovery Timing",
-      cold: "Post-workout recovery",
-      heat: "Pre-workout or relaxation",
-    },
-    {
-      aspect: "Mental Impact",
-      cold: "Builds mental resilience",
-      heat: "Calms nervous system",
-    },
-    {
-      aspect: "Used at Chill Thrive",
-      cold: "Yes",
-      heat: "Steam & Jacuzzi",
-    },
-  ],
+    table: [
+      {
+        aspect: "Best For",
+        cold: "Inflammation, swelling, soreness",
+        heat: "Muscle stiffness, relaxation",
+      },
+      {
+        aspect: "Blood Flow",
+        cold: "Reduces initially, increases post-session",
+        heat: "Increases immediately",
+      },
+      {
+        aspect: "Recovery Timing",
+        cold: "Post-workout recovery",
+        heat: "Pre-workout or relaxation",
+      },
+      {
+        aspect: "Mental Impact",
+        cold: "Builds mental resilience",
+        heat: "Calms nervous system",
+      },
+      {
+        aspect: "Used at Chill Thrive",
+        cold: "Yes",
+        heat: "Steam & Jacuzzi",
+      },
+    ],
   },
   {
     id: "disclaimer",
@@ -120,49 +120,47 @@ const AwarenessPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
-            className="bg-white/5 backdrop-blur-xl border border-blue-400/20 rounded-3xl p-10 shadow-xl"
-          >
+            className="bg-white/5 backdrop-blur-xl border border-blue-400/20 rounded-3xl p-10 shadow-xl">
             <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-blue-300">
               {section.title}
             </h2>
             {section.type === "table" ? (
-  <>
-    {/* Description text */}
-    <p className="text-blue-100 leading-relaxed mb-8 whitespace-pre-line">
-      {section.content}
-    </p>
+              <>
+                {/* Description text */}
+                <p className="text-blue-100 leading-relaxed mb-8 whitespace-pre-line">
+                  {section.content}
+                </p>
 
-    {/* Table */}
-    <div className="overflow-x-auto">
-      <table className="w-full border border-blue-400/30 rounded-2xl overflow-hidden">
-        <thead>
-          <tr className="bg-blue-900/60 text-white">
-            <th className="p-4 text-left">Aspect</th>
-            <th className="p-4 text-center">Cold Therapy ❄️</th>
-            <th className="p-4 text-center">Heat Therapy 🔥</th>
-          </tr>
-        </thead>
+                {/* Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full border border-blue-400/30 rounded-2xl overflow-hidden">
+                    <thead>
+                      <tr className="bg-blue-900/60 text-white">
+                        <th className="p-4 text-left">Aspect</th>
+                        <th className="p-4 text-center">Cold Therapy ❄️</th>
+                        <th className="p-4 text-center">Heat Therapy 🔥</th>
+                      </tr>
+                    </thead>
 
-        <tbody className="text-blue-100">
-          {section.table.map((row, i) => (
-            <tr
-              key={i}
-              className="border-t border-blue-400/20 even:bg-white/5"
-            >
-              <td className="p-4 font-semibold">{row.aspect}</td>
-              <td className="p-4 text-center">{row.cold}</td>
-              <td className="p-4 text-center">{row.heat}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </>
-) : (
-  <p className="text-blue-100 leading-relaxed whitespace-pre-line">
-    {section.content}
-  </p>
-)}
+                    <tbody className="text-blue-100">
+                      {section.table.map((row, i) => (
+                        <tr
+                          key={i}
+                          className="border-t border-blue-400/20 even:bg-white/5">
+                          <td className="p-4 font-semibold">{row.aspect}</td>
+                          <td className="p-4 text-center">{row.cold}</td>
+                          <td className="p-4 text-center">{row.heat}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            ) : (
+              <p className="text-blue-100 leading-relaxed whitespace-pre-line">
+                {section.content}
+              </p>
+            )}
 
           </motion.div>
         ))}
@@ -174,16 +172,15 @@ const AwarenessPage = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="text-center mt-24"
-      >
+        className="text-center mt-24">
         <h3 className="text-3xl font-bold mb-4">Ready to Experience Recovery?</h3>
         <p className="text-blue-200 mb-8">
           Discover guided cold and heat therapy sessions at Chill Thrive.
         </p>
         <Link to="/services">
-        <button className="px-8 py-4 rounded-full bg-blue-500 hover:bg-blue-600 transition font-semibold shadow-lg">
-          Book Your Session
-        </button>
+          <button className="px-8 py-4 rounded-full bg-blue-500 hover:bg-blue-600 transition font-semibold shadow-lg">
+            Book Your Session
+          </button>
         </Link>
       </motion.div>
     </div>
