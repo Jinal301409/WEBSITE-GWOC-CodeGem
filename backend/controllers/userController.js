@@ -1,6 +1,6 @@
 import userModel from "../modals/userModals.js";
 import jwt from "jsonwebtoken"
-import bycrypt from 'bcrypt'
+import bcrypt from 'bcrypt'
 import validator from 'validator'
 
 
@@ -14,7 +14,7 @@ const loginUser = async (req, res) => {
             return res.json({ success: false, message: "User Doesn't Exist" })
         }
 
-        const isMatch = await bycrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password, user.password)
         if(!isMatch) {
             return res.json({ success: false, message: "Incorrect Creds" })
         }

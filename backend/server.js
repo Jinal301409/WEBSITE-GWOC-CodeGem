@@ -7,10 +7,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import itemRouter from './routes/itemRoute.js';
 import userRouter from './routes/userRoute.js';
-import packageRouter from './routes/packageRoute.js';
+import cartRouter from './routes/cartRoute.js';
 
 
 const app = express();
+
 const port = process.env.PORT || 4000;
 
 const _filename = fileURLToPath(import.meta.url);
@@ -34,13 +35,13 @@ app.use(cors({
     credentials: true,
 }))
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 
 //ROUTES
 app.use('/api/user', userRouter)
 app.use('/uploads', express.static(path.join(_dirname, 'uploads')))
 app.use('/api/items', itemRouter)
-app.use('/api/package', packageRouter)
+app.use('/api/cart', cartRouter)
 
 
 app.get('/', (req, res) => {

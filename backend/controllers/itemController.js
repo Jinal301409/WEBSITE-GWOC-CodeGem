@@ -1,9 +1,9 @@
-import itemlodal from "../modals/itemModal.js";
+import itemModal from "../modals/itemModal.js";
 
 export const createItem = async (req, res, next)=>{
     try {
         const { name, description, category, price, rating, hearts }=req.body;
-        const imageUrl = req.file ?'/uploads/'+(req.file.filename):'';
+        const imageUrl = req.file ?'/uploads/' + (req.file.filename): null;
 
         const total = Number(price)*1;
         const newItem = new itemModal({
@@ -22,11 +22,19 @@ export const createItem = async (req, res, next)=>{
         res.status(201).json(saved)
     }
     catch (err) {
+        console.error(err);
+
         if(err.code == 11000) {
-            res.status(400).json({ message: "Item name already exists" })
+            return
+        res.status(400).json({ message: "Item name already exists" });
+        }
+        res.status(500).json({
+            message: "Failed to create item",
+            error: err.message
+        });
         }
     }
-}
+
 
 //GET FUNCTION TO GET ALL ITEMS
 export const getItems = async (req, res, next) => {
