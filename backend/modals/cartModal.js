@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const packageItemSchema = mongoose.Schema({
+const cartItemSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -19,4 +19,4 @@ const packageItemSchema = mongoose.Schema({
 }, {timestamps: true}
 );
 
-export const packageItem = mongoose.model('PackageItem', packageItemSchema);
+export const CartItem = mongoose.model('CartItem', cartItemSchema);
