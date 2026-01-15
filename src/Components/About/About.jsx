@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { features } from '../../assets/dummydata'
 import chillThriveImg from '../../assets/ChillThrive.jpg';
+import founderImg from '../../assets/founder.png'
+import { FaTwitter, FaInstagram, FaFacebook, FaLinkedin } from 'react-icons/fa'
 
 const About = () => {
 
@@ -67,6 +69,86 @@ const About = () => {
           })}
         </div>
       </section>
+      {/* ================= FOUNDER SECTION ================= */}
+<section className="py-24 px-6 md:px-12 bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#020617]">
+  <div className="max-w-6xl mx-auto text-center">
+
+    <motion.h2
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="text-4xl md:text-5xl font-bold text-white mb-14">
+      Meet the <span className="text-blue-400">Founder</span>
+    </motion.h2>
+
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="max-w-md mx-auto bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-10">
+      {/* IMAGE */}
+      <img
+        src={founderImg}
+        alt="Founder"
+        className="w-36 h-36 mx-auto rounded-full object-cover border-4 border-blue-500 mb-6"/>
+
+      {/* NAME */}
+      <h3 className="text-2xl font-bold text-white">
+        Saurav Jhawar
+      </h3>
+
+      {/* ROLE */}
+      <p className="text-blue-300 mt-1 mb-6">
+        Founder & CEO – Chill Thrive
+      </p>
+      <p className="text-blue-500 mt-1 mb-6">
+        The visionary behind Chill Thrive Wellness — a space designed to reset your mind, recharge your body, and elevate your well-being. From ice baths to steam therapy to jacuzzi recovery, this is where science meets serenity and wellness becomes a lifestyle.
+      </p>
+      <p className="text-white font-bold">
+         ❄🔥💧 Let the transformation begin.
+      </p>
+      <br></br>
+      {/* SOCIAL ICONS */}
+      <div className="flex justify-center gap-6 text-2xl text-blue-400">
+        <a
+          href="https://twitter.com/yourusername"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:text-white transition">
+          <FaTwitter />
+        </a>
+
+        <a
+          href="https://www.instagram.com/saurav_jhawar?igsh=bm41dmtuMXM4bHc0"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:text-white transition">
+          <FaInstagram />
+        </a>
+
+        <a
+          href="https://facebook.com/yourusername"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:text-white transition">
+          <FaFacebook />
+        </a>
+
+        <a
+          href="https://www.linkedin.com/in/chill-thrive-8a911b320 "
+          target="_blank"
+          rel="noreferrer"
+          className="hover:text-white transition">
+          <FaLinkedin />
+        </a>
+      </div>
+    </motion.div>
+  </div>
+</section>
+
+      
       {/* ABOUT CHILL THRIVE – ANIMATED BACKGROUND */}
       <section className="relative py-24 px-6 md:px-12 overflow-hidden">
 
@@ -83,8 +165,7 @@ const About = () => {
             repeat: Infinity,
             repeatType: "reverse",
             ease: "easeInOut",
-          }}
-        />
+          }}/>
 
         {/* Dark Blue Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-950/50 via-blue-900/40 to-blue-700/30" />
