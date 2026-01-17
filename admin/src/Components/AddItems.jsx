@@ -16,12 +16,12 @@ const AddItems = () => {
     image: null,
     preview: ''
   })
-  const handleHearts = () => {
-    setFormData(prev => ({
-      ...prev,
-      hearts: prev.hearts + 1
-    }))
-  }
+   const handleHearts = () => {
+     setFormData(prev => ({
+       ...prev,
+       hearts: prev.hearts + 1
+     }))
+   }
 
 
   const [hoverRating, setHoverRating] = useState(0)
