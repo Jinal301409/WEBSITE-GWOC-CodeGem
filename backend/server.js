@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import itemRouter from './routes/itemRoute.js';
 import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
+import orderRouter from './routes/orderRoute.js';
 
 
 const app = express();
@@ -42,6 +43,7 @@ app.use('/api/user', userRouter)
 app.use('/uploads', express.static(path.join(_dirname, 'uploads')))
 app.use('/api/items', itemRouter)
 app.use('/api/cart', cartRouter)
+app.use('/api/orders', orderRouter)
 
 
 app.get('/', (req, res) => {
