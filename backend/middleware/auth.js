@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+
 const authMiddleware = (req, res, next) => {
     const token = req.cookies?.token ||
         (req.headers.authorization && req.headers.authorization.split(' ')[1])
@@ -8,7 +9,7 @@ const authMiddleware = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = {id:decoded.id, email:decoded.email };
+        req.user = {_id:decoded.id, email:decoded.email };
         next();
     }
     catch (err) {
