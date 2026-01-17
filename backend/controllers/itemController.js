@@ -40,12 +40,21 @@ export const createItem = async (req, res, next)=>{
 export const getItems = async (req, res, next) => {
   try {
     const items = await itemModal.find().sort({ createdAt: -1 });
-    res.status(200).json(items);
+
+    const host = `${req.protocol}://${req.get('host')}`;
+
+    const withFullUrl = itemModel.applyTimestamps(i => ({
+      ...i.toObject(),
+      imageUrl: i.imageUrl ? host + i.imageUrl : '',
+    }))
+
+    res.json(withFullUrl)
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err.message });
+    next(err);
   }
-};
+}
+
 
 // DELETE FUNCTION TO DELETE ITEMS
 export const deleteItem = async (req, res, next) => {
