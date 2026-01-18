@@ -50,8 +50,9 @@ const orderSchema = new mongoose.Schema(
 
     status: {
         type: String,
-        enum: ['processing', 'outForDelivery', 'delivered'],
-        default: 'processing',
+        // booking lifecycle statuses
+        enum: ['scheduled', 'checkedIn', 'completed', 'cancelled'],
+        default: 'scheduled',
         index: true
     },
     expectedDelivery: Date,

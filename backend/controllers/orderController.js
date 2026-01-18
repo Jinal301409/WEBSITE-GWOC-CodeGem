@@ -51,11 +51,11 @@ export const createOrder = async (req, res) => {
             });
 
             newOrder = new Order({
-                user:req.user._id,
+                user:req.user?._id,
                 firstName, lastName, phone, email, address, city, zipCode, paymentMethod, subtotal,
                 tax, total, shipping: shippingCost, items: orderItems,
-                paymentIntentId: session.payment_intent,
-                sessionId: session.id,
+                paymentIntentId: session.payment_intent || null,
+                sessionId: session.id || null,
                 paymentStatus: 'pending'
             });
 
@@ -63,14 +63,14 @@ export const createOrder = async (req, res) => {
             return res.status(201).json({ order: newOrder, checkoutUrl: session.url })
         }
 
-        //IF PAYMENT IS DONE COD
+        //IF PAYMENT IS COD OR OTHER NON-ONLINE
         newOrder = new Order({
-                user:req.user._id,
+                user: req.user?._id,
                 firstName, lastName, phone, email, address, city, zipCode, paymentMethod, subtotal,
                 tax, total, shipping: shippingCost, items: orderItems,
-                paymentIntentId: session.payment_intent,
-                sessionId: session.id,
-                paymentStatus: 'pending'
+                paymentIntentId: null,
+                sessionId: null,
+                paymentStatus: paymentMethod === 'cod' ? 'pending' : 'pending'
         });
 
         await newOrder.save();
@@ -101,7 +101,7 @@ export const confirmPayment = async (req, res) => {
         return res.status(400).json({ message: 'payment not completed '})
     }
     catch (error) {
-        console.error(err);
+        console.error(error);
         res.status(500).json({ message: 'Server Error', err: error.message })
     }
 }
@@ -136,35 +136,37 @@ export const getAllOrders = async (req,res) => {
     try {
         const raw = await Order
             .find({})
-            .sort({ craetedAt: -1 })
+            .sort({ createdAt: -1 })
             .lean()
 
             const formatted = raw.map(o => ({
                 _id: o._id,
                 user: o.user,
-                firstName: o.firstName,
-                lastName: o.lastName,
-                email: o.email,
-                phone: o.phone,
+                firstName: o.firstName || '',
+                lastName: o.lastName || '',
+                email: o.email || '',
+                phone: o.phone || '',
                 address: o.address ?? o.shippingAddress ?? '',
                 city: o.city ?? o.shippingAddress?.city ?? '',
                 zipCode: o.zipCode ?? o.shippingAddress?.zipCode ?? '',
 
-                paymentMethod: o.paymentMethod, 
-                paymentStatus: o.paymentStatus,
-                status: o.status,
-                createdAt: o.createdAt,
+                paymentMethod: o.paymentMethod || null, 
+                paymentStatus: o.paymentStatus || 'pending',
+                status: o.status || 'scheduled',
+                createdAt: o.createdAt || new Date(),
 
-                items: o.items.map(i => ({
+                items: (o.items || []).map(i => ({
                     _id: i._id,
-                    item: i.item,
-                    quantity: i.quantity
+                    item: i.item || { name: i.item?.name || '', price: i.item?.price || 0, imageUrl: i.item?.imageUrl || '' },
+                    quantity: i.quantity || 0
                 }))
             }));
+
+            return res.json(formatted || []);
     }
     catch (error) {
             console.error('getAllOrders Error: ', error);
-            res.status(500).json({ message: 'Server Error', error: error.message })
+            return res.status(500).json({ message: 'Server Error', error: error.message })
     }
 }
 
@@ -223,7 +225,7 @@ export const updateOrder = async (req, res) => {
             return res.status(403).json({  message: 'Access Denied' })
         }
 
-        const updated = await Order.findByIdAndUpdate(req.params.id, req.body, { new: ture });
+        const updated = await Order.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.json(updated)
     }
     catch (error) {

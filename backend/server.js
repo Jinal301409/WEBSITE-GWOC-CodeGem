@@ -25,7 +25,7 @@ connectDB()
 //MIDDLEWARE
 app.use(cors({
     origin: (origin, callback) => {
-        const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174']
+        const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5178', 'http://localhost:5179']
         if(!origin || allowedOrigins.includes(origin)) {
             callback(null, true)
         }

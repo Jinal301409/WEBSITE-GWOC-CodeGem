@@ -2,7 +2,7 @@ import React from 'react'
 import {
     FiPlusCircle,
     FiList,
-    FiPackage, FiTruck, FiCheckCircle, FiClock,
+    FiPackage, FiTruck, FiCheckCircle, FiClock, FiCalendar, FiUserCheck, FiXCircle
 } from 'react-icons/fi';
 
 export const navLinks = [
@@ -84,36 +84,39 @@ export const iconMap = {
     FiClock: <FiClock className="text-lg text-blue-400" />,
     FiTruck: <FiTruck className="text-lg text-blue-400" />,
     FiCheckCircle: <FiCheckCircle className="text-lg text-blue-400" />,
+    FiCalendar: <FiCalendar className="text-lg text-amber-400" />,
+    FiUserCheck: <FiUserCheck className="text-lg text-blue-400" />,
+    FiXCircle: <FiXCircle className="text-lg text-red-400" />,
 };
-// Status styles for order statuses
+// Status styles for booking statuses
 export const statusStyles = {
-    processing: {
+    scheduled: {
         color: 'text-amber-400',
         bg: 'bg-amber-900/20',
-        icon: 'FiClock',
-        label: 'Processing',
+        icon: 'FiCalendar',
+        label: 'Scheduled',
         hideLabel: false,
     },
-    outForDelivery: {
+    checkedIn: {
         color: 'text-blue-400',
         bg: 'bg-blue-900/20',
-        icon: 'FiTruck',
-        label: 'Out for Delivery',
+        icon: 'FiUserCheck',
+        label: 'Checked In',
         hideLabel: false,
     },
-    delivered: {
-        color: 'text-green-400',
-        bg: 'bg-green-900/20',
-        icon: 'FiCheckCircle',
-        label: 'Delivered',
-        hideLabel: false,
-    },
-    succeeded: {
+    completed: {
         color: 'text-green-400',
         bg: 'bg-green-900/20',
         icon: 'FiCheckCircle',
         label: 'Completed',
-        hideLabel: true,
+        hideLabel: false,
+    },
+    cancelled: {
+        color: 'text-red-400',
+        bg: 'bg-red-900/20',
+        icon: 'FiXCircle',
+        label: 'Cancelled',
+        hideLabel: false,
     },
 };
 
