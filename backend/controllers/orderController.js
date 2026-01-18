@@ -108,28 +108,21 @@ export const confirmPayment = async (req, res) => {
 
 // GET ORDER
 export const getOrders = async (req, res) => {
-    try {
-        const filter = {user: req.user._id}; //order belongs to that particular user
-        const rawOrders = await Order.find(filter).sort({createdAt: -1}).lean()
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
 
-        // FORMAT
-        const formatted = rawOrders.map(o => ({
-            ...o,
-            items: o.items.map(i => ({
-                _id: i._id,
-                item: i.item,
-                quantity: i.quantity
-            })),
-            createdAt: o.createdAt,
-            paymentStatus: o.paymentStatus
-        }));
-        res.json(formatted)
-    }
-    catch (error) {
-        console.error('getOrders Error:', error );
-        res.status(500).json({ message: 'Server Error', error: error.message })
-    }
-}
+    const orders = await Order
+      .find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
 
 // ADMIN ROUTE GET ALL ORDERS
 export const getAllOrders = async (req,res) => {
@@ -196,9 +189,10 @@ export const getOrderById = async (req, res) => {
         const order = await Order.findById(req.params.id);
         if(!order) return res.status(404).json({ message: 'Order not found' });
 
-        if(!order.user.equals(req.user._id)) {
-            return res.status(403).json({ message: 'Access Denied' })
-        }
+        if (order.user && req.user && !order.user.equals(req.user._id)) {
+  return res.status(403).json({ message: 'Access Denied' });
+}
+
 
         if(req.query.email && order.email !== req.query.email) {
             return res.status(403).json({  message: 'Access Denied' })

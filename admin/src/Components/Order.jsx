@@ -10,38 +10,69 @@ const [loading, setLoading] = useState(true)
 const [error, setError] = useState(null)
 
 useEffect(() => {
+  let mounted = true;
+
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+
   const fetchOrders = async () => {
-    try {
-      const response = await axios.get(
-        'http://localhost:4000/api/orders/getall',
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        } //optional
-      );
+    setLoading(true);
 
-      const formatted = response.data.map(order => ({
-        ...order,
-        address: order.address ?? order.shippingAddress?.address ?? '',
-        city: order.city ?? order.shippingAddress?.city ?? '',
-        zipCode: order.zipCode ?? order.shippingAddress?.zipCode ?? '',
-        phone: order.phone ?? '',
-        items: order.items?.map(e => ({ _id: e._id, item: e.item, quantity: e.quantity })) || [],
-        createdAt: new Date(order.createdAt).toLocaleDateString('en-IN', {
-          year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
-        }),
-      }));
+    // Candidate base URLs: Vite env, explicit localhost, and relative path
+    const envBase = (import.meta && import.meta.env && import.meta.env.VITE_API_URL) || null;
+    const bases = [envBase, 'http://localhost:4000', ''].filter(Boolean);
 
-      setOrders(formatted);
-      setError(null);
-    } 
-    catch (err) {
-      setError(err.response?.data?.message || 'Failed to load orders.');
-    } 
-    finally {
+    let lastError = null;
+
+    for (const base of bases) {
+      // Try each base with a few attempts
+      const maxAttempts = 2;
+      for (let attempt = 1; attempt <= maxAttempts && mounted; attempt++) {
+        try {
+          const token = localStorage.getItem('token');
+          const url = base ? `${base}/api/orders/getall` : '/api/orders/getall';
+          const response = await axios.get(url, token ? { headers: { Authorization: `Bearer ${token}` } } : undefined);
+
+          const formatted = (response.data || []).map(order => ({
+            ...order,
+            address: order.address ?? order.shippingAddress?.address ?? '',
+            city: order.city ?? order.shippingAddress?.city ?? '',
+            zipCode: order.zipCode ?? order.shippingAddress?.zipCode ?? '',
+            phone: order.phone ?? '',
+            items: (order.items || []).map(e => ({ _id: e._id, item: e.item, quantity: e.quantity })) || [],
+            createdAt: new Date(order.createdAt).toLocaleDateString('en-IN', {
+              year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
+            }),
+          }));
+
+          if (!mounted) return;
+          setOrders(formatted);
+          setError(null);
+          setLoading(false);
+          return;
+        } catch (err) {
+          lastError = err;
+          // If network error or connection refused, wait and retry other bases
+          const isNetworkError = !err.response;
+          if (attempt < maxAttempts) await delay(200 * attempt);
+          if (!isNetworkError) break; // non-network error, stop retrying this base
+        }
+      }
+    }
+
+    if (mounted) {
+      // Provide helpful guidance when connection refused or network error
+      const msg = lastError?.message || 'Failed to load orders.';
+      const isConnRefused = lastError && (lastError.code === 'ECONNREFUSED' || /ECONNREFUSED/.test(lastError.message) || /Network Error/.test(lastError.message));
+      setError(isConnRefused
+        ? 'Cannot reach backend at http://localhost:4000. Start the backend (cd backend && npm run dev) then reload.'
+        : (lastError?.response?.data?.message || msg));
       setLoading(false);
     }
   };
+
   fetchOrders();
+
+  return () => { mounted = false };
 }, []);
 const handleStatusChange = async (orderId, newStatus) => {
   try {
@@ -58,7 +89,7 @@ const handleStatusChange = async (orderId, newStatus) => {
     );
   }
 };
-if (loading) return (
+if (loading && !error) return (
 <div className={layoutClasses.page + ' flex items-center justify-center'}>
 <div className=' text-blue-400 text-xl'>Loading orders ... </div>
 </div>
@@ -86,9 +117,9 @@ if (error) return (
               <tbody>
                 {orders.map(order =>{
                   // Sum up the quantities of all items in the order
-const totalItems = order.items.reduce((s, i) => s + i.quantity, 0);
+const totalItems = (order.items || []).reduce((s, i) => s + (i.quantity || 0), 0);
 // Use the precomputed total if available; otherwise calculate price × quantity for each item
-const totalPrice = order.total ?? order.items.reduce((s, i) => s + i.item.price * i.quantity, 0);
+const totalPrice = (order.total != null) ? order.total : (order.items || []).reduce((s, i) => s + ((i.item?.price || 0) * (i.quantity || 0)), 0);
 // Look up the display details for the payment method (lowercased), defaulting if not found
 const payMethod = paymentMethodDetails[order.paymentMethod?.toLowerCase()] || paymentMethodDetails.default;
 
@@ -102,7 +133,7 @@ return (
 <tr key={order._id} className={tableClasses.row}>
   <td
     className={tableClasses.cellBase +' font-mono text-sm text-white'}>
-    #{order._id.slice(-8)}
+    #{(String(order._id || '')).slice(-8)}
   </td>
 
   <td className={tableClasses.cellBase}>
@@ -112,7 +143,7 @@ return (
       <div>
         <p className="text-white">
           {order.user?.name ||
-            order.firstName + ' ' + order.lastName}
+            ((order.firstName || '') + ' ' + (order.lastName || ''))}
         </p>
 
         <p className="text-sm text-blue-400/60">
@@ -134,21 +165,21 @@ return (
 
 <td className={tableClasses.cellBase}>
   <div className=' space-y-1 max-h-52 overflow-auto'>
-    {order.items.map((itm, idx) => (
+    {(order.items || []).map((itm, idx) => (
       <div
         key={idx}
         className="flex items-center gap-3 p-2 rounded-lg text-amber-100/80 text-sm max-w-[200px]">
-        <img src={itm.item?.imageUrl ? `http://localhost:4000${itm.item.imageUrl}` : ''} alt={itm.item.name} 
+        <img src={itm.item?.imageUrl ? `http://localhost:4000${itm.item.imageUrl}` : ''} alt={itm.item?.name || ''} 
         className=' w-10 h-10 object-cover rounded-lg' />
         <div className=' flex-1'>
 <span className=' text-white text-sm block
 truncate'>
-{itm.item.name}
+{itm.item?.name}
 </span>
 <div className=' flex items-center gap-2 text-xs text-blue-400/60' >
-<span>₹{itm.item.price.toFixed(2)}</span>
+<span>₹{(itm.item?.price || 0).toFixed(2)}</span>
 <span>&dot;</span>
-<span>x{itm.quantity}</span>
+<span>x{itm.quantity || 0}</span>
 </div>
 </div>
       </div>
@@ -194,7 +225,6 @@ truncate'>
         text-sm cursor-pointer
         focus:outline-none focus:ring-2 focus:ring-blue-500/40`}>
       {Object.entries(statusStyles)
-        .filter(([key]) => key !== 'succeeded')
         .map(([key, sty]) => (
           <option
             key={key}
