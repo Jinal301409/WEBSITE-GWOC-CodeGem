@@ -15,8 +15,8 @@ const app = express();
 
 const port = process.env.PORT || 4000;
 
-const _filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 //DATABASE
@@ -25,7 +25,7 @@ connectDB()
 //MIDDLEWARE
 app.use(cors({
     origin: (origin, callback) => {
-        const allowedOrigins = ['http://localhost:5174/', 'http://localhost:5175/']
+        const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174']
         if(!origin || allowedOrigins.includes(origin)) {
             callback(null, true)
         }
@@ -40,16 +40,16 @@ app.use(express.urlencoded({ extended: true }));
 
 //ROUTES
 app.use('/api/user', userRouter)
-app.use('/uploads', express.static(path.join(_dirname, 'uploads')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use('/api/items', itemRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/orders', orderRouter)
 
 
 app.get('/', (req, res) => {
-    res.send('API WORKING');
+    res.send('API WORKING')
 })
 
 app.listen(port, () => {
-    console.log('Server Started on http://localhost:4000');
+    console.log(`Server Started on http://localhost:${port}`)
 })

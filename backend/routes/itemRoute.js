@@ -7,7 +7,7 @@ const itemRouter = express.Router()
 // TYPE HERE MULTER FUNCTION TO STORE IMAGE
 const storage = multer.diskStorage({
     destination: (_req, _file, cb) => cb(null, 'uploads/'),
-    filename: (_req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+    filename: (_req,file,cb) => cb(null, `${Date.now()}-${file.originalname}`),
 })
 
 const upload = multer({ storage });
