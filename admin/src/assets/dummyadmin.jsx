@@ -85,7 +85,37 @@ export const iconMap = {
     FiTruck: <FiTruck className="text-lg text-blue-400" />,
     FiCheckCircle: <FiCheckCircle className="text-lg text-blue-400" />,
 };
-
+// Status styles for order statuses
+export const statusStyles = {
+    processing: {
+        color: 'text-amber-400',
+        bg: 'bg-amber-900/20',
+        icon: 'FiClock',
+        label: 'Processing',
+        hideLabel: false,
+    },
+    outForDelivery: {
+        color: 'text-blue-400',
+        bg: 'bg-blue-900/20',
+        icon: 'FiTruck',
+        label: 'Out for Delivery',
+        hideLabel: false,
+    },
+    delivered: {
+        color: 'text-green-400',
+        bg: 'bg-green-900/20',
+        icon: 'FiCheckCircle',
+        label: 'Delivered',
+        hideLabel: false,
+    },
+    succeeded: {
+        color: 'text-green-400',
+        bg: 'bg-green-900/20',
+        icon: 'FiCheckCircle',
+        label: 'Completed',
+        hideLabel: true,
+    },
+};
 
 // Payment method label and classes
 export const paymentMethodDetails = {

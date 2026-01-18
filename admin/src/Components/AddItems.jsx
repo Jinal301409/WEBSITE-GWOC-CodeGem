@@ -16,12 +16,12 @@ const AddItems = () => {
     image: null,
     preview: ''
   })
-   const handleHearts = () => {
+   const handleHearts = () => 
      setFormData(prev => ({
        ...prev,
        hearts: prev.hearts + 1
      }))
-   }
+   
 
 
   const [hoverRating, setHoverRating] = useState(0);
@@ -42,24 +42,24 @@ const AddItems = () => {
     }
   }
 
-  const handleRating = (rating) =>
+  const handleRating = rating =>
     setFormData(prev => ({ ...prev, rating }))
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
   e.preventDefault();
 
   try {
     const payload = new FormData();
+    // append fields explicitly so file is sent as file
+    payload.append('name', formData.name);
+    payload.append('description', formData.description);
+    payload.append('category', formData.category);
+    payload.append('price', formData.price);
+    payload.append('rating', formData.rating);
+    payload.append('hearts', formData.hearts);
+    if (formData.image) payload.append('image', formData.image);
 
-    payload.append("name", formData.name);
-    payload.append("description", formData.description);
-    payload.append("category", formData.category);
-    payload.append("price", formData.price);
-    payload.append("rating", formData.rating);
-    payload.append("hearts", formData.hearts);
-    payload.append("image", formData.image); // IMPORTANT
-
-    await axios.post(
+    const res = await axios.post(
       "http://localhost:4000/api/items",
       payload
     );
@@ -77,9 +77,9 @@ const AddItems = () => {
     });
 
   } catch (err) {
-    console.error("Error uploading item:", err.response?.data || err.message);
+    console.error('Error uploading item:', err.response || err.message)
   }
-};
+}
   const [categories] = useState([
     'Ice Bath Therapy',
     'Jacuzzi Therapy',
@@ -112,6 +112,7 @@ const AddItems = () => {
                 )}
                 <input
                   type="file"
+                  name="image"
                   accept="image/*"
                   onChange={handleImageUpload}
                   className="hidden"
@@ -239,8 +240,8 @@ min='0' required />
                 </div>
               </div>
               </div>
-              <button type='submit' className={styles. actionBtn}>
-Add To Menu
+              <button type='submit' className={styles.actionBtn}>
+Add To Services
 </button>
             </div>
           </form>

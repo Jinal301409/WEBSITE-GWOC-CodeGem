@@ -25,6 +25,8 @@ export const createItem = async (req, res, next)=>{
 
         if(err.code == 11000) {
         res.status(400).json({ message: 'Item name already exists' });
+        } else {
+          next(err)
         }
         }
     }
@@ -37,7 +39,7 @@ export const getItems = async (_req, res, next) => {
 
     const host = `${_req.protocol}://${_req.get('host')}`;
 
-    const withFullUrl = itemModal.applyTimestamps(i => ({
+    const withFullUrl = items.map(i => ({
       ...i.toObject(),
       imageUrl: i.imageUrl ? host + i.imageUrl : '',
     }))
@@ -46,7 +48,6 @@ export const getItems = async (_req, res, next) => {
     next(err);
   }
 }
-
 
 
 // DELETE FUNCTION TO DELETE ITEMS
