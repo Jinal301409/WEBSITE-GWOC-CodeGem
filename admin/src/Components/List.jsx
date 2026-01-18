@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { styles } from '../assets/dummyadmin';
-import { FiStar } from 'react-icons/fi';
+import { FiHeart, FiStar, FiTrash2 } from 'react-icons/fi';
 import axios from 'axios';
 const List = () => {
   const [items, setItems] = useState([]);
@@ -84,12 +84,38 @@ const List = () => {
                     <td className={styles.categoryCell}>
                       {item.category}
                     </td>
+                    <td className={styles.priceCell}>₹{item.price}</td>
+<td className={styles.ratingCell}>
+<div className=' flex gap-1'>{renderStars(item.rating)}</div>
+</td>
+
+<td className={styles.heartsCell}>
+  <div className={styles.heartsWrapper}>
+    <FiHeart className="text-xl" />
+    <span>{item.hearts}</span>
+  </div>
+</td>
+
+<td className="p-4 text-center">
+  <button
+    onClick={() => handleDelete(item._id)}
+    className={styles.deleteBtn}
+  >
+    <FiTrash2 className="text-2xl" />
+  </button>
+</td>
+
 
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          {items.length === 0 && (
+<div className={styles.emptyState}>
+No items found in the services
+</div>
+          )}
 
         </div>
       </div>
