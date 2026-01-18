@@ -24,15 +24,15 @@ const AddItems = () => {
    }
 
 
-  const [hoverRating, setHoverRating] = useState(0)
+  const [hoverRating, setHoverRating] = useState(0);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   }
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0]
+  const handleImageUpload = e => {
+    const file = e.target.files[0];
     if (file) {
       setFormData(prev => ({
         ...prev,
@@ -46,50 +46,54 @@ const AddItems = () => {
     setFormData(prev => ({ ...prev, rating }))
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const payload = new FormData()
-      Object.entries(formData).forEach(([key, val]) => {
-        if (key === 'preview') return
-        payload.append(key, val)
-      })
+  e.preventDefault();
 
-      await axios.post(
-        'http://localhost:4000/api/items',
-        payload,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      )
+  try {
+    const payload = new FormData();
 
-      setFormData({
-        name: '',
-        description: '',
-        category: '',
-        price: '',
-        rating: 0,
-        hearts: 0,
-        total: 0,
-        image: null,
-        preview: ''
-      })
-    } catch (err) {
-      console.error('Error uploading item:', err.response || err.message)
-    }
+    payload.append("name", formData.name);
+    payload.append("description", formData.description);
+    payload.append("category", formData.category);
+    payload.append("price", formData.price);
+    payload.append("rating", formData.rating);
+    payload.append("hearts", formData.hearts);
+    payload.append("image", formData.image); // IMPORTANT
+
+    await axios.post(
+      "http://localhost:4000/api/items",
+      payload
+    );
+
+    setFormData({
+      name: '',
+      description: '',
+      category: '',
+      price: '',
+      rating: 0,
+      hearts: 0,
+      total: 0,
+      image: null,
+      preview: ''
+    });
+
+  } catch (err) {
+    console.error("Error uploading item:", err.response?.data || err.message);
   }
-
+};
   const [categories] = useState([
     'Ice Bath Therapy',
     'Jacuzzi Therapy',
     'Steam Therapy',
     'Combo Packages'
-  ])
+  ]);
 
   return (
     <div className={styles.formWrapper}>
-      <div className="max-w-4xl mx-auto">
+      <div className=' max-w-4xl mx-auto'>
         <div className={styles.formCard}>
-          <h2 className={styles.formTitle}>Add New Menu Item</h2>
+          <h2 className={styles.formTitle}>Add New Service</h2>
 
-          <form className="space-y-6 sm:space-y-8" onSubmit={handleSubmit}>
+          <form className=' space-y-6 sm:space-y-8' onSubmit={handleSubmit}>
             <div className={styles.uploadWrapper}>
               <label className={styles.uploadLabel}>
                 {formData.preview ? (
@@ -99,7 +103,7 @@ const AddItems = () => {
                     className={styles.previewImage}
                   />
                 ) : (
-                  <div className="text-center p-4">
+                  <div className=' text-center p-4'>
                     <FiUpload className={styles.uploadIcon} />
                     <p className={styles.uploadText}>
                       Click to upload product image
