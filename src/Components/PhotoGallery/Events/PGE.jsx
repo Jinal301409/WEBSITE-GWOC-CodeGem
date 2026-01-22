@@ -1,31 +1,31 @@
 import React from "react";
-import bb1 from "../assets/blackbunny1.png";
-import bb2 from "../assets/blackbunny2.png";
-import bb3 from "../assets/blackbunny3.png";
-import bb4 from "../assets/blackbunny4.png";
-import bb5 from "../assets/blackbunny5.png";
-import bb6 from "../assets/blackbunny6.png";
+import bb1 from "../../assets/bb1.png";
+import bb2 from "../../assets/bb2.png";
+import bb3 from "../../assets/bb3.png";
+import bb4 from "../../assets/bb4.png";
+import bb5 from "../../assets/bb5.png";
+import bb6 from "../../assets/bb6.png";
 
-/*import fs1 from "../assets/events/funstreet1.jpg";
-import fs2 from "../assets/events/funstreet2.jpg";
-import fs3 from "../assets/events/funstreet3.jpg";
-import fs4 from "../assets/events/funstreet4.jpg";
-import fs5 from "../assets/events/funstreet5.jpg";
-import fs6 from "../assets/events/funstreet6.jpg";
+import fs1 from "../../assets/fs1.png";
+import fs2 from "../../assets/fs2.png";
+import fs3 from "../../assets/fs3.png";
+import fs4 from "../../assets/fs4.png";
+import fs5 from "../../assets/fs5.png";
+import fs6 from "../../assets/fs6.png";
 
-import tf1 from "../assets/events/theeflea1.jpg";
-import tf2 from "../assets/events/theeflea2.jpg";
-import tf3 from "../assets/events/theeflea3.jpg";
-import tf4 from "../assets/events/theeflea4.jpg";
-import tf5 from "../assets/events/theeflea5.jpg";
-import tf6 from "../assets/events/theeflea6.jpg";
+import tf2 from "../../assets/tf1.png";
+import tf3 from "../../assets/tf2.png";
+import tf4 from "../../assets/tf3.png";
+import tf5 from "../../assets/tf4.png";
+import tf6 from "../../assets/tf5.png";
+import tf1 from "../../assets/tf6.png";
 
-import sp1 from "../assets/events/special1.jpg";
-import sp2 from "../assets/events/special2.jpg";
-import sp3 from "../assets/events/special3.jpg";
-import sp4 from "../assets/events/special4.jpg";
-import sp5 from "../assets/events/special5.jpg";
-import sp6 from "../assets/events/special6.jpg"; */
+import sp1 from "../../assets/sp1.png";
+import sp2 from "../../assets/sp2.png";
+import sp3 from "../../assets/sp3.png";
+import sp4 from "../../assets/sp4.png";
+import sp5 from "../../assets/sp5.png";
+import sp6 from "../../assets/sp6.png";
 
 const photos = [
   bb1, bb2, bb3, bb4, bb5, bb6,

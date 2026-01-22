@@ -2,8 +2,8 @@ import itemModal from "../modals/itemModal.js";
 
 export const createItem = async (req, res, next)=>{
     try {
-        const { name, description, category, price, rating, hearts }=req.body;
-        const imageUrl = req.file ?'/uploads/' + (req.file.filename): null;
+        const { name, description, category, price, rating, hearts } = req.body;
+        const imageUrl = req.file ? `/uploads/${req.file.filename}`: '';
 
         const total = Number(price)*1;
         const newItem = new itemModal({
@@ -22,34 +22,32 @@ export const createItem = async (req, res, next)=>{
         res.status(201).json(saved)
     }
     catch (err) {
-        console.error(err);
 
         if(err.code == 11000) {
-            return
-        res.status(400).json({ message: "Item name already exists" });
+        res.status(400).json({ message: 'Item name already exists' });
+        } else {
+          next(err)
         }
-        res.status(500).json({
-            message: "Failed to create item",
-            error: err.message
-        });
         }
     }
 
 
 //GET FUNCTION TO GET ALL ITEMS
-export const getItems = async (req, res, next) => {
+export const getItems = async (_req, res, next) => {
   try {
     const items = await itemModal.find().sort({ createdAt: -1 });
 
-    const host = `${req.protocol}://${req.get('host')}`;
+    const host = `${_req.protocol}://${_req.get('host')}`;
 
+<<<<<<< HEAD
     const withFullUrl = itemModal.applyTimestamps(i => ({
+=======
+    const withFullUrl = items.map(i => ({
+>>>>>>> d4beede50a897ff72af77c2bc3427e4dbf0a65b5
       ...i.toObject(),
       imageUrl: i.imageUrl ? host + i.imageUrl : '',
     }))
-
     res.json(withFullUrl)
-
   } catch (err) {
     next(err);
   }
@@ -60,7 +58,7 @@ export const getItems = async (req, res, next) => {
 export const deleteItem = async (req, res, next) => {
     try {
         const removed = await itemModal.findByIdAndDelete(req.params.id);
-        if(!removed) return res.status(404).json({ message: "Item not found" })
+        if (!removed) return res.status(404).json({ message: "Item not found" })
         res.status(204).end()
     } catch (err) {
         next(err);

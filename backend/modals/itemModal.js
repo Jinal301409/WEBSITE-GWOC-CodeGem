@@ -8,7 +8,7 @@ const itemSchema = new mongoose.Schema({
     rating: { type: Number, default: 0 },
     hearts: { type: Number, default: 0 },
     total: { type: Number, default: 0 },
-    imageUrl: { type: String, default: null },
+    imageUrl: { type: String },
 }, { timestamps: true });
 
 export default mongoose.model('Item', itemSchema);

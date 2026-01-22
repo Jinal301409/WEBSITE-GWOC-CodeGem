@@ -2,7 +2,7 @@ import React from 'react'
 import {
     FiPlusCircle,
     FiList,
-    FiPackage, FiTruck, FiCheckCircle, FiClock,
+    FiPackage, FiTruck, FiCheckCircle, FiClock, FiCalendar, FiUserCheck, FiXCircle
 } from 'react-icons/fi';
 
 export const navLinks = [
@@ -84,8 +84,41 @@ export const iconMap = {
     FiClock: <FiClock className="text-lg text-blue-400" />,
     FiTruck: <FiTruck className="text-lg text-blue-400" />,
     FiCheckCircle: <FiCheckCircle className="text-lg text-blue-400" />,
+    FiCalendar: <FiCalendar className="text-lg text-amber-400" />,
+    FiUserCheck: <FiUserCheck className="text-lg text-blue-400" />,
+    FiXCircle: <FiXCircle className="text-lg text-red-400" />,
 };
-
+// Status styles for booking statuses
+export const statusStyles = {
+    scheduled: {
+        color: 'text-amber-400',
+        bg: 'bg-amber-900/20',
+        icon: 'FiCalendar',
+        label: 'Scheduled',
+        hideLabel: false,
+    },
+    checkedIn: {
+        color: 'text-blue-400',
+        bg: 'bg-blue-900/20',
+        icon: 'FiUserCheck',
+        label: 'Checked In',
+        hideLabel: false,
+    },
+    completed: {
+        color: 'text-green-400',
+        bg: 'bg-green-900/20',
+        icon: 'FiCheckCircle',
+        label: 'Completed',
+        hideLabel: false,
+    },
+    cancelled: {
+        color: 'text-red-400',
+        bg: 'bg-red-900/20',
+        icon: 'FiXCircle',
+        label: 'Cancelled',
+        hideLabel: false,
+    },
+};
 
 // Payment method label and classes
 export const paymentMethodDetails = {
