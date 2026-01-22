@@ -53,8 +53,8 @@ const registerUser = async (req, res) => {
         }
 
         //IF EVERYTHING WORKS
-        const salt = await bycrypt.genSalt(10)
-        const hashedPassword = await bycrypt.hash(password, salt)
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
 
         // NEW USER
         const newUser = new userModel({

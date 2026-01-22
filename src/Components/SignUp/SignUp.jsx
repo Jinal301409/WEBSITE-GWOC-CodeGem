@@ -13,54 +13,79 @@ const AwesomeToast = ({ message, icon }) => (
   </div>
 );
 const SignUp = () => {
-  const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState({ visible: false, message: '', icon: null });
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const navigate = useNavigate();
 
-//FOR TOAST
+//FOR TOAST - navigate on success
 useEffect(() => {
-  if(showToast.visible && showToast.message === 'Sign Up Successful') {
+  if (showToast.visible && showToast.message === 'Sign Up Successful') {
     const timer = setTimeout(() => {
-      setShowToast({visible: true, message: '', icon: null })
+      setShowToast({ visible: false, message: '', icon: null });
       navigate('/login');
-    }, 2000)
-    return () => clearTimeout(timer)
+    }, 2000);
+    return () => clearTimeout(timer);
   }
-}, [showToast, navigate])
+}, [showToast, navigate]);
 
   const toggleShowPassword = () => setShowPassword(prev => !prev);
   const handleChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('Sign up fired:', formData)
+    console.log('Sign up fired:', formData);
     try {
-        const res = await axios.post(`{url}`, formData)
-        console.log('Register Response:', res.data)
+        // POST to relative API endpoint - Vite proxy will forward to backend in dev
+        const res = await axios.post('http://localhost:4000/api/user/register', formData);
+        console.log('Register Response:', res.data);
 
-        if(res.data.success && res.data.token) {
-          localStorage.setItem('authToken', res.data.token)
+        // assume backend returns { success: true, token: '...' } or similar
+        if (res.data && (res.data.success || res.status === 201)) {
+          if (res.data.token) localStorage.setItem('authToken', res.data.token);
           setShowToast({
             visible: true,
-            message: 'Sign up Successfull',
+            message: 'Sign Up Successful',
             icon: <FaCheckCircle />
-          })
+          });
           return;
         }
-        throw new Error(res.data,message || 'Registration failed');
+        const msg = res.data?.message || 'Registration failed';
+        throw new Error(msg);
     }
     catch (err) {
-        console.error('Registration Error', err)
-        const msg = err.response?.data?.message || err.message || 'Registration failed';
-        setShowToast({ visible: false, message: msg, icon: <FaCheckCircle /> })
-    }
+  console.log('AXIOS FULL ERROR:', err);
+
+  if (err.response) {
+    // Backend responded with error status
+    console.log('STATUS:', err.response.status);
+    console.log('DATA:', err.response.data);
+  } else if (err.request) {
+    // Request sent but no response
+    console.log('NO RESPONSE FROM SERVER');
+  } else {
+    // Something else
+    console.log('ERROR MESSAGE:', err.message);
+  }
+
+  const msg =
+    err.response?.data?.message ||
+    err.message ||
+    'Registration failed';
+
+  setShowToast({
+    visible: true,
+    message: msg,
+    icon: <FaCheckCircle />
+  });
+}
+
   };
 
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 bg-blue-800 relative overflow-hidden">
 
-      {showToast && <AwesomeToast message="Sign Up Successful" icon={<FaCheckCircle />} />}
+      {showToast.visible && <AwesomeToast message={showToast.message} icon={showToast.icon} />}
 
       <div className="w-full max-w-md bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl shadow-lg
         border-4 border-blue-400/30 transform transition-all duration-300 hover:shadow-2xl">

@@ -6,23 +6,23 @@ import React, {
   useCallback,
   useMemo
 } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 
 const CartContext = createContext();
 
 const cartReducer = (state, action) => {
   switch (action.type) {
     case 'HYDRATE_CART':
-      return action.payload;
+      return Array.isArray(action.payload) ? action.payload : [];
 
     case 'ADD_ITEM': {
       const { _id, item, quantity } = action.payload;
-      const exists = state.find(i => ci._id === _id);
+      const exists = state.find(ci => ci._id === _id);
 
       if (exists) {
         return state.map(ci =>
           ci._id === _id
-            ? { ...ci, quantity: ci.quantity + quantity }
+            ? { ...ci, quantity: (ci.quantity || 0) + (quantity || 0) }
             : ci
         );
       }
@@ -30,7 +30,7 @@ const cartReducer = (state, action) => {
     }
 
     case 'REMOVE_ITEM':
-      return state.filter(i => ci._id !== action.payload);
+      return state.filter(ci => ci._id !== action.payload);
 
     case 'UPDATE_ITEM': {
       const { _id, quantity } = action.payload;
@@ -41,7 +41,7 @@ const cartReducer = (state, action) => {
       );
     }
     case 'CLEAR_CART':
-        return[];
+        return [];
 
     default:
       return state;
@@ -50,10 +50,11 @@ const cartReducer = (state, action) => {
 
 const initializer = () => {
     try{
-      return JSON.parse(localStorage.getItem('cart' || '[]'));
+      const raw = localStorage.getItem('cart');
+      return raw ? JSON.parse(raw) : [];
     }
     catch {
-      return []
+      return [];
     }
 }
 
@@ -67,41 +68,39 @@ export const CartProvider = ({ children }) => {
   //HYDRATE FROM SERVER API
   useEffect(() => {
     const token = localStorage.getItem('authToken')
-    axios.get('http://localhost:4000/api/cart', {
+    axios.get('/api/cart', {
       withCredentials: true,
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then(res => dispatch({ type: 'HYDRATE_CART', payload: res.data }))
+      .then(res => dispatch({ type: 'HYDRATE_CART', payload: Array.isArray(res.data) ? res.data : [] }))
       .catch(err => {if (err.response?.status !== 401) console.error(err) })
   }, [])
 
-  const cartTotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const totalItems = (cartItems || []).reduce((sum, ci) => sum + (ci.quantity || 0), 0);
+  const totalAmount = (cartItems || []).reduce((sum, ci) => {
+    const price = ci?.item?.price ?? 0;
+    const qty = ci?.quantity ?? 0;
+    return sum + price * qty
+  }, 0)
 
-  const totalItemsCount = cartItems.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
 //DISPATCH WRAPPED WITH useCALLBACK FOR PERFORMANCE
   const addToCart = useCallback(async (item, qty) => {
     const token = localStorage.getItem('authToken')
-    const res = await axios.post(
-      'http://localhost:4000/api/cart',
+    await axios.post(
+      '/api/cart',
       { itemId: item._id, quantity: qty },
       {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` }
       }
     )
-    dispatch({ type: 'ADD_ITEM', payload: { item, quantity } });
+    dispatch({ type: 'ADD_ITEM', payload: { _id: item._id, item, quantity: qty } });
   }, []);
 
   const removeFromCart = useCallback(async _id => {
     const token = localStorage.getItem('authToken')
     await axios.delete(
-      `http://localhost:4000/api/cart/${_id}`,
+      `/api/cart/${_id}`,
       {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` }
@@ -113,20 +112,21 @@ export const CartProvider = ({ children }) => {
   const updateQuantity = useCallback(async (_id, qty) => {
     const token = localStorage.getItem('authToken')
     const res = await axios.put(
-      `http://localhost:4000/api/cart/${_id}`,
+      `/api/cart/${_id}`,
       { quantity: qty },
       {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` }
       }
     )
-    dispatch({ type: 'UPDATE_ITEM', payload: res.data });
+    // expect res.data to contain updated item {_id, item, quantity}
+    dispatch({ type: 'UPDATE_ITEM', payload: { _id, quantity: qty } });
   }, []);
 
   const clearCart = useCallback(async () => {
     const token = localStorage.getItem('authToken')
     await axios.post(
-      `http://localhost:4000/api/cart/clear`,
+      `/api/cart/clear`,
       {},
       {
         withCredentials: true,
@@ -136,13 +136,6 @@ export const CartProvider = ({ children }) => {
     dispatch({ type: 'CLEAR_CART'})
   }, [])
 
-  const totalItems = cartItems.reduce((sum, ci) => sum + ci.quantity, 0);
-  const totalAmount = cartItems.reduce((sum, ci) => {
-    const price = ci?.item?.price ?? 0;
-    const qty = ci?.quantity ?? 0;
-    return sum + price * qty
-  }, 0)
-
   const value = useMemo(() => ({
     cartItems,
     addToCart,
@@ -151,7 +144,7 @@ export const CartProvider = ({ children }) => {
     clearCart,
     totalItems,
     totalAmount,
-  }), [cartItems, cartTotal, totalItemsCount]);
+  }), [cartItems, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalAmount]);
 
   return (
     <CartContext.Provider value={value}>
