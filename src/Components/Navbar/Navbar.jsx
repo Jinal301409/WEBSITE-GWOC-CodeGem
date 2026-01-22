@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaBath, FaFirefox } from "react-icons/fa6";
 import { NavLink } from 'react-router-dom';
-import { FiHome, FiBook, FiPhone, FiStar, FiShoppingCart, FiLogOut, FiKey, FiImage } from "react-icons/fi";
+import { FiHome, FiBook, FiPhone, FiStar, FiShoppingCart, FiLogOut, FiKey, FiImage, FiPackage } from "react-icons/fi";
 import { useCart } from '../../CartContext/CartContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -35,17 +35,17 @@ const Navbar = () => {
   //EXTRACT DESKTOP AUTH BUTTON
   const renderDesktopAuthButton = () => {
     return isAuthenticated ? (
-      <button onClick={handleLogout} className=' px-3 md:px-3 lg:px-6 py-1.5 md:py-2 lg:py-3 bg-gradient-to-br from-blue-600
+      <button onClick={handleLogout} className=' px-2 lg:px-4 py-1.5 lg:py-2 bg-gradient-to-br from-blue-600
       to-blue-700 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-blue-600/40 transition-all
-      shadow-md shadow-blue-900/20 text-xs md:text-sm lg:text-sm'>
-        <FiLogOut className=' text-base md:text-lg lg:text-lg' />
+      shadow-md shadow-blue-900/20 text-sm'>
+        <FiLogOut className=' text-base lg:text-lg' />
         <span className=' text-shadow'>Logout</span>
       </button>
     ) : (
-      <button onClick={() => navigate('/login')} className=' px-3 md:px-3 lg:px-6 py-1.5 md:py-2 lg:py-3 bg-gradient-to-br from-blue-600
+      <button onClick={() => navigate('/login')} className=' px-2 lg:px-4 py-1.5 lg:py-2 bg-gradient-to-br from-blue-600
       to-blue-700 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-blue-600/40 transition-all
-      shadow-md shadow-blue-900/20 text-xs md:text-sm lg:text-sm'>
-        <FiKey className=' text-base md:text-lg lg:text-lg' />
+      shadow-md shadow-blue-900/20 text-sm'>
+        <FiKey className=' text-base lg:text-lg' />
         <span className=' text-shadow'>Login</span>
       </button>
     )
@@ -85,6 +85,9 @@ const Navbar = () => {
     { name: 'Awareness Page', to: '/aware', icon: <FaFirefox /> },
     { name: 'Photo Gallary/Events', to: '/photo', icon: <FiImage /> },
     { name: 'Contact', to: '/contact', icon: <FiPhone /> },
+    ...(isAuthenticated ? [
+      { name: 'MyOrders', to: '/myorder', icon: <FiPackage /> }
+    ] : [])
   ];
   return (
     <nav className='bg-blue-900 border-b-4 border-blue-700 shadow-blue-900/30 sticky 

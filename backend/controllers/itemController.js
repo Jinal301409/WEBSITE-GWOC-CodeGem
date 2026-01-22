@@ -43,7 +43,7 @@ export const getItems = async (req, res, next) => {
 
     const host = `${req.protocol}://${req.get('host')}`;
 
-    const withFullUrl = itemModel.applyTimestamps(i => ({
+    const withFullUrl = itemModal.applyTimestamps(i => ({
       ...i.toObject(),
       imageUrl: i.imageUrl ? host + i.imageUrl : '',
     }))
