@@ -1,16 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../CartContext/CartContext';
 import { FaMinus, FaPlus, FaTimes, FaTrash } from 'react-icons/fa';
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
-  const cartTotal = cartItems.reduce((total, item) => {
-    const price = Number(item.price.replace("₹", ""));
-    return total + price * item.quantity;
+
+  const cartTotal = cartItems.reduce((total, ci) => {
+    const price = Number(
+      String(ci.item?.price || '').replace(/[^\d]/g, '')
+    );
+    return total + price * (ci.quantity || 0);
   }, 0);
 
   const [selectedImage, setSelectedImage] = useState(null);
+
   return (
     <div className='min-h-screen overflow-x-hidden py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#1e40af]'>
       <div className='max-w-7xl mx-auto'>
@@ -19,6 +23,7 @@ const CartPage = () => {
             Your Cart
           </span>
         </h1>
+
         {cartItems.length === 0 ? (
           <div className='text-center animate-fade-in'>
             <p className='text-blue-100/80 text-xl mb-4'>
@@ -35,123 +40,105 @@ const CartPage = () => {
         ) : (
           <>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-              {cartItems.map((item) => (
-                <div
-                  key={item.id}
-                  className='group bg-blue-900/20 p-4 rounded-2xl border-4 border-dashed
-                 border-blue-500 backdrop-blur-sm flex flex-col items-center gap-4
-                 transition-all duration-300 hover:border-solid hover:shadow-xl [hover:shadow-blue-900/10]
-                 transform hover:-translate-y-1 animate-fade-in'
-                >
-                  <div className='w-24 h-24 flex-shrink-0 cursor-pointer relative overflow-hidden
-                      rounded-lg transition-transform duration-300'
-                    onClick={() => setSelectedImage(item.image)}>
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className='w-full h-full object-contain' />
-                  </div>
-                  <div className='w-full text-center'>
-                    <h3 className='text-xl font-dancingscript text-blue-200'>
-                      {item.title}
-                    </h3>
-                    <p className='text-blue-100/80 font-cinzel mt-1'>
-                      {item.price}
-                    </p>
-                  </div>
-                  <div className='flex items-center gap-3'>
-                    <button
-                      onClick={() =>
-                        updateQuantity(item.id, Math.max(1, item.quantity - 1))
-                      }
-                      className='w-8 h-8 rounded-full bg-blue-900/40 flex items-center justify-center
-    transition-all duration-200 active:scale-95'
-                    >
-                      <FaMinus className='w-4 text-blue-100 font-cinzel text-center' />
-                    </button>
-                    <span className=' w-8 text-center text-blue-100 font-cinzel'>
-                      {item.quantity}
-                    </span>
-                    <button
-                      onClick={() =>
-                        updateQuantity(item.id, item.quantity + 1)
-                      }
-                      className='w-8 h-8 rounded-full bg-blue-900/40 flex items-center justify-center
-    transition-all duration-200 active:scale-95'
-                    >
-                      <FaPlus className='w-4 text-blue-100 font-cinzel text-center' />
-                    </button>
-                  </div>
-                  <div className='flex items-center justify-between w-full'>
-                    <button
-                      onClick={() => removeFromCart(item.id)}
-                      className='bg-blue-900/40 px-3 py-1 rounded-full font-cinzel text-xs uppercase
-    transition-all duration-300 hover:bg-blue-800/50 flex items-center gap-1
-    active:scale-95'
-                    >
-                      <FaTrash className='w-4 h-4 text-blue-100' />
-                      <span className='text-blue-100'>Remove</span>
-                    </button>
-                    <p className='text-sm font-dancingscript text-blue-300'>
-                      ₹{Number(item.price.replace("₹", "")) * Number(item.quantity)}
-                    </p>
-                  </div>
+              {cartItems.map((ci) => {
+                const price = Number(
+                  String(ci.item?.price || '').replace(/[^\d]/g, '')
+                );
 
+                return (
+                  <div
+                    key={ci._id} // ✅ FIX
+                    className='group bg-blue-900/20 p-4 rounded-2xl border-4 border-dashed
+                    border-blue-500 backdrop-blur-sm flex flex-col items-center gap-4'
+                  >
+                    <div
+                      className='w-24 h-24 cursor-pointer'
+                      onClick={() => setSelectedImage(ci.item.image)} // ✅ FIX
+                    >
+                      <img
+                        src={ci.item.image}
+                        alt={ci.item.title}
+                        className='w-full h-full object-contain'
+                      />
+                    </div>
 
-                </div>
-              ))}
+                    <div className='text-center'>
+                      <h3 className='text-xl font-dancingscript text-blue-200'>
+                        {ci.item.title} {/* ✅ FIX */}
+                      </h3>
+                      <p className='text-blue-100/80 font-cinzel mt-1'>
+                        {ci.item.price} {/* ✅ FIX */}
+                      </p>
+                    </div>
+
+                    <div className='flex items-center gap-3'>
+                      <button
+                        onClick={() =>
+                          updateQuantity(ci._id, Math.max(1, ci.quantity - 1)) // ✅ FIX
+                        }
+                        className='w-8 h-8 rounded-full bg-blue-900/40'
+                      >
+                        <FaMinus className='text-blue-100' />
+                      </button>
+
+                      <span className='text-blue-100'>
+                        {ci.quantity}
+                      </span>
+
+                      <button
+                        onClick={() =>
+                          updateQuantity(ci._id, ci.quantity + 1) // ✅ FIX
+                        }
+                        className='w-8 h-8 rounded-full bg-blue-900/40'
+                      >
+                        <FaPlus className='text-blue-100' />
+                      </button>
+                    </div>
+
+                    <div className='flex justify-between w-full'>
+                      <button
+                        onClick={() => removeFromCart(ci._id)} // ✅ FIX
+                        className='bg-blue-900/40 px-3 py-1 rounded-full'
+                      >
+                        <FaTrash className='text-blue-100' />
+                        <span className='text-blue-100 ml-1'>Remove</span>
+                      </button>
+
+                      <p className='text-blue-300 font-dancingscript'>
+                        ₹{price * ci.quantity}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            <div className='mt-12 pt-8 border-t border-blue-800/30 animate-fade-in-up'>
-              <div className='flex flex-col sm:flex-row justify-between items-center gap-8'>
-                <Link
-                  to='/services'
-                  className='bg-blue-900/40 px-8 py-3 rounded-full font-cinzel uppercase
-                 tracking-wider hover:bg-blue-800/50 transition-all duration-300
-                 text-blue-100 inline-flex items-center gap-2 hover:gap-3
-                 active:scale-95'
-                >
+
+            <div className='mt-12 pt-8 border-t border-blue-800/30'>
+              <div className='flex justify-between items-center'>
+                <Link to='/services' className='bg-blue-900/40 px-8 py-3 rounded-full'>
                   Continue Shopping
                 </Link>
-                <div className='flex items-center gap-8'>
-                  <h2 className='text-3xl font-dancingscript text-blue-100'>
-                    Total: ₹{cartTotal}
-                  </h2>
-                  <button className='bg-blue-900/40 px-8 py-3 rounded-full font-cinzel uppercase
-                 tracking-wider hover:bg-blue-800/50 transition-all duration-300
-                 text-blue-100 flex items-center gap-2 active:scale-95'>
-                    Checkout Now
-                  </button>
-                </div>
 
+                <h2 className='text-3xl font-dancingscript text-blue-100'>
+                  Total: ₹{cartTotal}
+                </h2>
               </div>
             </div>
-
-
           </>
         )}
-
       </div>
+
       {selectedImage && (
         <div
-          className='fixed inset-0 z-50 flex items-center justify-center bg-amber-900/40 bg-opacity-75 backdrop-blur p-4 overflow-auto'
-          onClick={() => setSelectedImage(null)}>
-          <div className='relative max-w-full max-h-full'>
-            <img
-              src={selectedImage}
-              alt='Full View'
-              className='object-contain max-w-[90vw] max-h-[90vh] rounded-lg' />
-            <button onClick={() => setSelectedImage(null)}
-              className=' absolute top-1 right-1 bg-blue-900/80 rounded-full p-2 text-white
-duration-200 active: scale-90 hover:bg-blue-700'>
-              <FaTimes className='w-6 h-6' />
-            </button>
-
-          </div>
+          className='fixed inset-0 z-50 flex items-center justify-center bg-black/70'
+          onClick={() => setSelectedImage(null)}
+        >
+          <img src={selectedImage} className='max-w-[90vw] max-h-[90vh]' />
+          <FaTimes className='absolute top-6 right-6 text-white text-2xl' />
         </div>
       )}
-
     </div>
-  )
-}
+  );
+};
 
-export default CartPage
+export default CartPage;
