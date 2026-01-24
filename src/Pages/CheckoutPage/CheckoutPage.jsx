@@ -1,11 +1,16 @@
-import React from 'react'
+import React from "react";
+import Navbar from "../../Components/Navbar/Navbar";
+import Footer from "../../Components/Footer/Footer";
+import Checkout from "../../Components/Checkout/Checkout";
 
-const CheckOut = () => {
+const CheckoutPage = () => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <>
+      <Navbar />
+      <Checkout />
+      <Footer />
+    </>
+  );
+};
 
-export default CheckOut
+export default CheckoutPage;

@@ -31,7 +31,7 @@ const CartPage = () => {
             </p>
 
             <Link
-              to='/menu'
+              to='/Services'
               className='transition-all duration-300 text-blue-200 inline-flex items-center gap-2 hover:gap-3 hover:bg-blue-800/50 uppercase px-4 py-2 rounded-lg'
             >
               Browse All Items
@@ -47,13 +47,13 @@ const CartPage = () => {
 
                 return (
                   <div
-                    key={ci._id} // ✅ FIX
+                    key={ci._id}
                     className='group bg-blue-900/20 p-4 rounded-2xl border-4 border-dashed
                     border-blue-500 backdrop-blur-sm flex flex-col items-center gap-4'
                   >
                     <div
                       className='w-24 h-24 cursor-pointer'
-                      onClick={() => setSelectedImage(ci.item.image)} // ✅ FIX
+                      onClick={() => setSelectedImage(ci.item.image)}
                     >
                       <img
                         src={ci.item.image}
@@ -64,17 +64,17 @@ const CartPage = () => {
 
                     <div className='text-center'>
                       <h3 className='text-xl font-dancingscript text-blue-200'>
-                        {ci.item.title} {/* ✅ FIX */}
+                        {ci.item.title}
                       </h3>
                       <p className='text-blue-100/80 font-cinzel mt-1'>
-                        {ci.item.price} {/* ✅ FIX */}
+                        {ci.item.price}
                       </p>
                     </div>
 
                     <div className='flex items-center gap-3'>
                       <button
                         onClick={() =>
-                          updateQuantity(ci._id, Math.max(1, ci.quantity - 1)) // ✅ FIX
+                          updateQuantity(ci._id, Math.max(1, ci.quantity - 1))
                         }
                         className='w-8 h-8 rounded-full bg-blue-900/40'
                       >
@@ -87,7 +87,7 @@ const CartPage = () => {
 
                       <button
                         onClick={() =>
-                          updateQuantity(ci._id, ci.quantity + 1) // ✅ FIX
+                          updateQuantity(ci._id, ci.quantity + 1)
                         }
                         className='w-8 h-8 rounded-full bg-blue-900/40'
                       >
@@ -97,7 +97,7 @@ const CartPage = () => {
 
                     <div className='flex justify-between w-full'>
                       <button
-                        onClick={() => removeFromCart(ci._id)} // ✅ FIX
+                        onClick={() => removeFromCart(ci._id)}
                         className='bg-blue-900/40 px-3 py-1 rounded-full'
                       >
                         <FaTrash className='text-blue-100' />
@@ -122,6 +122,16 @@ const CartPage = () => {
                 <h2 className='text-3xl font-dancingscript text-blue-100'>
                   Total: ₹{cartTotal}
                 </h2>
+
+                {/* ✅ ONLY CHANGE HERE */}
+                <Link
+                  to="/checkout"
+                  className='bg-blue-600/40 px-8 py-3 rounded-full font-cinzel uppercase
+                  tracking-wider hover:bg-blue-600/50 transition-all duration-300 text-amber-100
+                  flex items-center gap-2 active:scale-95'
+                >
+                  Checkout Now
+                </Link>
               </div>
             </div>
           </>

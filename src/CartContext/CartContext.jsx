@@ -63,9 +63,11 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // 🔧 HYDRATE FROM SERVER (SAFE)
+  // ✅ HYDRATE FROM SERVER (ONLY IF LOGGED IN)
   useEffect(() => {
     const token = localStorage.getItem('authToken');
+    if (!token) return;
+
     axios
       .get('/api/cart', {
         withCredentials: true,
@@ -78,7 +80,7 @@ export const CartProvider = ({ children }) => {
         });
       })
       .catch(() => {
-        // ✅ silently ignore if backend cart doesn't exist
+        // silently ignore
       });
   }, []);
 
@@ -93,7 +95,6 @@ export const CartProvider = ({ children }) => {
     return sum + price * qty;
   }, 0);
 
-  // 🔧 ADD TO CART (API OPTIONAL)
   const addToCart = useCallback(async (item, qty) => {
     const token = localStorage.getItem('authToken');
 
@@ -106,9 +107,7 @@ export const CartProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
-    } catch {
-      // ✅ backend cart not ready – fallback to local
-    }
+    } catch {}
 
     dispatch({
       type: 'ADD_ITEM',
@@ -116,7 +115,6 @@ export const CartProvider = ({ children }) => {
     });
   }, []);
 
-  // 🔧 REMOVE FROM CART
   const removeFromCart = useCallback(async _id => {
     const token = localStorage.getItem('authToken');
 
@@ -125,14 +123,11 @@ export const CartProvider = ({ children }) => {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` }
       });
-    } catch {
-      // fallback to local
-    }
+    } catch {}
 
     dispatch({ type: 'REMOVE_ITEM', payload: _id });
   }, []);
 
-  // 🔧 UPDATE QUANTITY
   const updateQuantity = useCallback(async (_id, qty) => {
     const token = localStorage.getItem('authToken');
 
@@ -145,14 +140,11 @@ export const CartProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
-    } catch {
-      // fallback to local
-    }
+    } catch {}
 
     dispatch({ type: 'UPDATE_ITEM', payload: { _id, quantity: qty } });
   }, []);
 
-  // 🔧 CLEAR CART
   const clearCart = useCallback(async () => {
     const token = localStorage.getItem('authToken');
 
@@ -165,9 +157,7 @@ export const CartProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
-    } catch {
-      // fallback to local
-    }
+    } catch {}
 
     dispatch({ type: 'CLEAR_CART' });
   }, []);
