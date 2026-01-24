@@ -6,7 +6,7 @@ import { useCart } from '../../CartContext/CartContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Login from '../../Components/Login/Login'; // adjust path if different
-
+import Logo from '../../assets/Logo.png';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
@@ -110,10 +110,13 @@ const Navbar = () => {
         opacity-0 group-hover/nav:opacity-100 transition-opacity duration-300'/>
             <div className=' flex flex-col relative ml-2 max-w-[140px] md:max-w-[160px] lg:max-w-none'>
               <NavLink to='/' className=' text-xl md:text-4xl font-semibold text-white
-              hover:text-blue-300 transition flex items-center'>
-                <span className='mr-2'>❄️</span>
-                Chill Thrive
-                <span className='ml-2'>❄️</span>
+              hover:text-blue-300 transition flex items-center gap-2'>
+                <img
+                  src={Logo}
+                  alt="Chill Thrive Logo"
+                  className="h-8 md:h-10 lg:h-12 w-auto"
+                />
+                <span>Chill Thrive</span>
               </NavLink>
               <div className=' h-[3px] bg-gradient-to-r from-blue-600/30 via-blue-400/50 to-blue-600/30 w-full
           mt-1 ml-1 shadow-[0_2px_5px] shadow-blue-500/20'/>
