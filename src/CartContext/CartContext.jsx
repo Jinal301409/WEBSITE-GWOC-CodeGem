@@ -10,34 +10,54 @@ import axios from 'axios';
 
 const CartContext = createContext();
 
+// Helper to get a consistent ID from an item (handles both MongoDB _id and frontend id)
+const getItemId = (item) => item?._id || item?.id;
+
 const cartReducer = (state, action) => {
   switch (action.type) {
     case 'HYDRATE_CART':
-      return Array.isArray(action.payload) ? action.payload : [];
+  return action.payload.map(ci => ({
+    cartId: ci._id,          // backend cart item id
+    item: ci.item,           // actual service
+    quantity: ci.quantity
+  }));
+
 
     case 'ADD_ITEM': {
-      const { _id, item, quantity } = action.payload;
-      const exists = state.find(ci => ci._id === _id);
+  const { item, quantity } = action.payload;
 
-      if (exists) {
-        return state.map(ci =>
-          ci._id === _id
-            ? { ...ci, quantity: (ci.quantity || 0) + (quantity || 0) }
-            : ci
-        );
-      }
-      return [...state, { _id, item, quantity }];
-    }
+  const newItemId = getItemId(item);
+  const exists = newItemId && state.find(ci => getItemId(ci.item) === newItemId);
+
+  if (exists) {
+    return state.map(ci =>
+      getItemId(ci.item) === newItemId
+        ? { ...ci, quantity: ci.quantity + quantity }
+        : ci
+    );
+  }
+
+  return [...state, {
+    cartId: null,   // will be filled by backend later
+    item,
+    quantity
+  }];
+}
+
 
     case 'REMOVE_ITEM':
-      return state.filter(ci => ci._id !== action.payload);
+      // Remove by cartId (if exists) OR by item ID
+      return state.filter(ci => (ci.cartId || getItemId(ci.item)) !== action.payload);
 
-    case 'UPDATE_ITEM': {
-      const { _id, quantity } = action.payload;
-      return state.map(ci =>
-        ci._id === _id ? { ...ci, quantity } : ci
-      );
-    }
+    case 'UPDATE_ITEM':
+  return state.map(ci =>
+    // Match by cartId (if exists) OR by item ID
+    (ci.cartId || getItemId(ci.item)) === action.payload.cartId
+      ? { ...ci, quantity: action.payload.quantity }
+      : ci
+  );
+
+ 
 
     case 'CLEAR_CART':
       return [];
@@ -96,53 +116,65 @@ export const CartProvider = ({ children }) => {
   }, 0);
 
   const addToCart = useCallback(async (item, qty) => {
+    if (!item || (!item._id && !item.id)) {
+      console.error('Invalid item passed to addToCart');
+      return;
+    }
+
     const token = localStorage.getItem('authToken');
 
     try {
-      await axios.post(
-        '/api/cart',
-        { itemId: item._id, quantity: qty },
-        {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      if (item._id) {
+        await axios.post(
+          '/api/cart',
+          { itemId: item._id, quantity: qty },
+          {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+      }
     } catch {}
 
     dispatch({
       type: 'ADD_ITEM',
-      payload: { _id: item._id, item, quantity: qty }
+      payload: { item, quantity: qty }
     });
   }, []);
 
-  const removeFromCart = useCallback(async _id => {
+  const removeFromCart = useCallback(async (id) => {
     const token = localStorage.getItem('authToken');
 
     try {
-      await axios.delete(`/api/cart/${_id}`, {
-        withCredentials: true,
-        headers: { Authorization: `Bearer ${token}` }
-      });
-    } catch {}
-
-    dispatch({ type: 'REMOVE_ITEM', payload: _id });
-  }, []);
-
-  const updateQuantity = useCallback(async (_id, qty) => {
-    const token = localStorage.getItem('authToken');
-
-    try {
-      await axios.put(
-        `/api/cart/${_id}`,
-        { quantity: qty },
-        {
+      // Only call API if it looks like a MongoDB ID (usually 24 hex chars) or if we know it's a backend item
+      if (typeof id === 'string' && id.length === 24) {
+        await axios.delete(`/api/cart/${id}`, {
           withCredentials: true,
           headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+        });
+      }
     } catch {}
 
-    dispatch({ type: 'UPDATE_ITEM', payload: { _id, quantity: qty } });
+    dispatch({ type: 'REMOVE_ITEM', payload: id });
+  }, []);
+
+  const updateQuantity = useCallback(async (id, qty) => {
+    const token = localStorage.getItem('authToken');
+
+    try {
+      if (typeof id === 'string' && id.length === 24) {
+        await axios.put(
+          `/api/cart/${id}`,
+          { quantity: qty },
+          {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+      }
+    } catch {}
+
+    dispatch({ type: 'UPDATE_ITEM', payload: { cartId: id, quantity: qty } });
   }, []);
 
   const clearCart = useCallback(async () => {

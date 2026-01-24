@@ -2,16 +2,8 @@ import BannerImage from "./BannerImage.jpeg";
 import Image1 from "./Image1.jpeg";
 import Image2 from "./Image2.jpeg";
 import Image3 from "./Image3.jpeg";
-import Image4 from "./Image4.jpeg";
+import Image4 from "./Image4.png";
 import Video from "./Video.mp4";
-import IceBath from "./IceBath.jpeg";
-import SteamBath from "./SteamBath.jpeg";
-import Jacuzzi from "./Jacuzzi.jpeg";
-import ContrastTherapy from "./ContrastTherapy.jpeg";
-import RecoveryPack from "./RecoveryPack.jpeg";
-import AthleteRecovery from "./AthleteRecovery.jpeg";
-import FirstTimeOffer from "./FirstTimeOffer.jpeg";
-import MindBodyReset from "./MindBodyReset.jpeg";
 import IA1 from './IA1.jpg';
 import IA2 from './IA2.jpg';
 import IA3 from './IA3.jpg';
@@ -74,47 +66,6 @@ export const stats = [
     icon: FaStar,
   },
 ];
-// export const teamMembers = [
-//     {
-//         name: "Marco Yansen",
-//         role: "Executive Chef",
-//         img: IA4,
-//         bio: "3 Michelin stars | Italian cuisine specialist",
-//         delay: 0.1,
-//         social: {
-//             twitter: "https://x.com/?lang=en",
-//             instagram: "https://www.instagram.com/",
-//             facebook: "https://www.facebook.com/",
-//             linkedin: "https://www.linkedin.com/",
-//         },
-//     },
-//     {
-//         name: "Amit Singh",
-//         role: "Pastry Chef",
-//         img: IA5,
-//         bio: "World Baking Champion | French desserts expert",
-//         delay: 0.3,
-//         social: {
-//             twitter: "https://x.com/?lang=en",
-//             instagram: "https://www.instagram.com/",
-//             facebook: "https://www.facebook.com/",
-//             linkedin: "https://www.linkedin.com/",
-//         },
-//     },
-//     {
-//         name: "Akash Trivedi",
-//         role: "Sushi Chef",
-//         img: IA6,
-//         bio: "5th generation sushi chef | Traditional techniques",
-//         delay: 0.5,
-//         social: {
-//             twitter: "https://x.com/?lang=en",
-//             instagram: "https://www.instagram.com/",
-//             facebook: "https://www.facebook.com/",
-//             linkedin: "https://www.linkedin.com/",
-//         },
-//     },
-// ];
 // ABOUT HOMEPAGE
 export const aboutfeature = [
     { icon: FaBolt, title: "Instant Recovery", text: "Quick and effective cold & heat therapy sessions", color: "from-amber-400 to-orange-500" },
@@ -126,20 +77,6 @@ export const aboutfeature = [
 export const commonTransition = "transition-all duration-300";
 export const addButtonBase ="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-2.5 rounded-xl font-bold border-2 border-blue-400/30";
 export const addButtonHover ="hover:gap-3 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 relative overflow-hidden";
-
-// TODAY'S SPECIAL OFFERS – CHILL THRIVE
-export const cardData = [
-  {id: 1, title: 'Ice Bath Recovery', rating: 4.9, hearts: 320, description: 'Cold immersion therapy to reduce inflammation and boost recovery', image: IceBath, popular: true, price: 499},
-  {id: 2, title: 'Steam Recovery Therapy', rating: 4.8, hearts: 280, description: 'Deep heat therapy for detoxification, relaxation, and circulation', image: SteamBath, bestseller: true, price: 399},
-  {id: 3, title: 'Jacuzzi Relaxation Therapy', rating: 4.7, hearts: 245, description: 'Hydrotherapy session for muscle relaxation and stress relief', image: Jacuzzi, price: 599},
-  {id: 4, title: 'Cold + Heat Therapy Combo', rating: 5.0, hearts: 410, description: 'Contrast therapy combining ice bath and steam for maximum recovery', image: ContrastTherapy, special: true, price: 799}
-];
-export const additionalData = [
-  { id: 5, title: 'Full Recovery Pack', rating: 5.0, hearts: 520, description: 'Ice bath, steam, and jacuzzi therapy in one complete recovery session', image: RecoveryPack, popular: true, price: 999},
-  {id: 6, title: 'Athlete Performance Session', rating: 4.9, hearts: 360, description: 'High-performance recovery designed for athletes and fitness enthusiasts', image: AthleteRecovery, price: 1199},
-  {id: 7, title: 'First-Time Chill Offer', rating: 4.6, hearts: 290, description: 'Exclusive discounted recovery session for first-time visitors', image: FirstTimeOffer, price: 349},
-  {id: 8, title: 'Mind & Body Reset', rating: 4.8, hearts: 405, description: 'A calming blend of steam and jacuzzi therapy for mental relaxation', image: MindBodyReset, special: true, price: 699}
-];
 // CONTACT
 export const contactFormFields = [
     { label: 'Full Name', name: 'name', type: 'text', placeholder: 'Enter your full name', Icon: FiUser },

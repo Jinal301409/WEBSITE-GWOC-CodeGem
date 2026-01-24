@@ -1,14 +1,47 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import { useCart } from '../../CartContext/CartContext'
 import { dummyMenuData } from '../../assets/OmhDD'
 import { FaMinus, FaPlus, FaArrowRight } from 'react-icons/fa'
 import './OurMenu.css'
+
 const categories = ['Ice Bath Therapy', 'Jacuzzi Therapy', 'Steam Therapy', 'Combo Packages']
+
 const OurMenu = () => {
   const [activeCategory, setActiveCategory] = useState(categories[0]);
-  const displayItems = (dummyMenuData[activeCategory] || []).slice(0, 12);
+  const [apiItems, setApiItems] = useState([]);
+
+  // Fetch items from API
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/items');
+        if (response.data && response.data.data) {
+           setApiItems(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
+    fetchItems();
+  }, []);
+
+  // Merge dummy data with API items
+  // Assuming API items have a 'category' field that matches our categories, 
+  // or we just append them to the list if you want them all shown.
+  // Here we filter API items that match the active category.
+  const staticItems = dummyMenuData[activeCategory] || [];
+  const dynamicItems = apiItems.filter(item => item.category === activeCategory);
+  const displayItems = [...staticItems, ...dynamicItems];
+
   const { cartItems, addToCart, removeFromCart, updateQuantity } = useCart()
-  const getQuantity = id => (cartItems.find(i => i.id === id)?.quantity || 0)
+  
+  // Fix getQuantity to check both _id and id
+  const getQuantity = (itemId) => {
+    const cartItem = cartItems.find(ci => (ci.item._id === itemId || ci.item.id === itemId));
+    return cartItem ? cartItem.quantity : 0;
+  }
+
   return (
     <div className="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#1e40af] min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -39,10 +72,11 @@ const OurMenu = () => {
         </div>
         <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4'>
           {displayItems.map((item, i) => {
-            const quantity = getQuantity(item.id);
+            const itemId = item._id || item.id;
+            const quantity = getQuantity(itemId);
             return (
               <div
-                key={item.id}
+                key={itemId}
                 className='relative bg-blue-900/20 rounded-2xl overflow-hidden border border-blue-800/30 backdrop-blur-sm flex flex-col transition-all duration-500'
                 style={{ '--index': i }}>
                 <div className='relative h-48 sm:h-56 md:h-60 flex items-center justify-center bg-white/10'>
@@ -81,7 +115,7 @@ const OurMenu = () => {
                       {quantity > 0 ? (
                         <>
                           <button className=' w-8 h-8 rounded-full bg-blue-900/40 flex items-center
-      justify-center hover:bg-blue-800/50 transition-colors' onClick={() => quantity > 1 ? updateQuantity(item.id, quantity - 1) : removeFromCart(item.id)}>
+      justify-center hover:bg-blue-800/50 transition-colors' onClick={() => quantity > 1 ? updateQuantity(itemId, quantity - 1) : removeFromCart(itemId)}>
                             <FaMinus className=' text-white' />
                           </button>
                           <span className=' w-8 text-center text-white'>

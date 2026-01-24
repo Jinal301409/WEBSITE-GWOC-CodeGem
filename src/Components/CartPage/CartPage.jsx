@@ -44,10 +44,12 @@ const CartPage = () => {
                 const price = Number(
                   String(ci.item?.price || '').replace(/[^\d]/g, '')
                 );
+                
+                const itemId = ci.cartId || ci.item._id || ci.item.id;
 
                 return (
                   <div
-                    key={ci._id}
+                    key={itemId}
                     className='group bg-blue-900/20 p-4 rounded-2xl border-4 border-dashed
                     border-blue-500 backdrop-blur-sm flex flex-col items-center gap-4'
                   >
@@ -74,7 +76,7 @@ const CartPage = () => {
                     <div className='flex items-center gap-3'>
                       <button
                         onClick={() =>
-                          updateQuantity(ci._id, Math.max(1, ci.quantity - 1))
+                          updateQuantity(itemId, Math.max(1, ci.quantity - 1))
                         }
                         className='w-8 h-8 rounded-full bg-blue-900/40'
                       >
@@ -87,7 +89,7 @@ const CartPage = () => {
 
                       <button
                         onClick={() =>
-                          updateQuantity(ci._id, ci.quantity + 1)
+                          updateQuantity(itemId, ci.quantity + 1)
                         }
                         className='w-8 h-8 rounded-full bg-blue-900/40'
                       >
@@ -97,7 +99,7 @@ const CartPage = () => {
 
                     <div className='flex justify-between w-full'>
                       <button
-                        onClick={() => removeFromCart(ci._id)}
+                        onClick={() => removeFromCart(itemId)}
                         className='bg-blue-900/40 px-3 py-1 rounded-full'
                       >
                         <FaTrash className='text-blue-100' />

@@ -77,10 +77,11 @@ const Checkout = () => {
       tax,
       total: subtotal + tax,
       items: cartItems.map(({ item, quantity }) => ({
-        name: item.name,
+        name: item.title || item.name,
         price: Number(String(item.price).replace(/[^\d]/g, "")),
         quantity,
-        imageUrl: item.imageUrl || "",
+        imageUrl: item.image || item.imageUrl || "",
+        itemId: item._id || item.id,
       })),
     };
 
@@ -136,8 +137,8 @@ const Checkout = () => {
             {cartItems.map(({ item, quantity }) => {
               const price = Number(String(item.price).replace(/[^\d]/g, ""));
               return (
-                <div key={item._id} className="flex justify-between text-sm">
-                  <span>{item.name} × {quantity}</span>
+                <div key={item._id || item.id} className="flex justify-between text-sm">
+                  <span>{item.title || item.name} × {quantity}</span>
                   <span>₹{price * quantity}</span>
                 </div>
               );

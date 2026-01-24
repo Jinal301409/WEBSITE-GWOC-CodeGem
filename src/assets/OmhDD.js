@@ -1,8 +1,8 @@
-import Icebath from './Icebath.jpg'
+import Icebath from './Icebath.png'
 import IceJacuzzi from './IceJacuzzi.png'
 import IceSteam from './IceSteam.png'
 import fullrecovery from './fullrecovery.png'
-import jacuzzi from './jacuzzi.png'
+import jacuzzi from './jacuzzi.jpg'
 import Steam from './Steam.png'
 
 export const dummyMenuData = {
