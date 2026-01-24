@@ -24,16 +24,29 @@ const App = () => {
       <Route path='/signup' element={<SignUp />} />
 
       {/* PAYMENT VERIFICATION */}
-      <Route path= '/myorder/verify' element={<VerifyPaymentPage/>}/>
+      <Route path='/myorder/verify' element={<VerifyPaymentPage />} />
       <Route path='/aware' element={<AwarenessPage />} />
       <Route path='/photo' element={<Events />} />
-      <Route path='/cart' element={
-        <PrivateRoute>
-        <Cart />
-        </PrivateRoute>
-      } />
-      <Route path='/checkout' element={<PrivateRoute><CheckoutPage/></PrivateRoute> }/>
-      <Route path='/myorder' element={<PrivateRoute><MyOrderPage/></PrivateRoute>}/>
+
+      <Route path='/cart' element={<Cart />} />
+
+      
+      <Route
+        path='/checkout'
+        element={
+          <PrivateRoute>
+            <CheckoutPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path='/myorder'
+        element={
+          <PrivateRoute>
+            <MyOrderPage />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 };
