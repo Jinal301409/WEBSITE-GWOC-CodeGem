@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 import { FaArrowLeft } from "react-icons/fa6";
-import { FiClock, FiTruck, FiCheckCircle } from "react-icons/fi";
+import { FiClock, FiTruck, FiCheckCircle, FiMapPin } from "react-icons/fi";
 
 const MyOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -12,24 +12,41 @@ const MyOrder = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // FETCH ORDERS
   useEffect(() => {
-    // 👇 If user/email missing, stop loading and show UI
-    if (!user?.email) {
-      setLoading(false);
-      setOrders([]);
-      return;
-    }
-
     const fetchOrders = async () => {
-      setLoading(true);
       try {
-        const res = await axios.get("http://localhost:4000/api/orders", {
-          params: { email: user.email },
-        });
-        setOrders(res.data || []);
+        const response = await axios.get(
+          "http://localhost:4000/api/orders",
+          {
+            params: { email: user?.email },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        const formattedOrders = response.data.map((order) => ({
+          ...order,
+          items:
+            order.items?.map((entry) => ({
+              _id: entry._id,
+              item: {
+                ...entry.item,
+                imageUrl: entry.item.imageUrl,
+              },
+              quantity: entry.quantity,
+            })) || [],
+          paymentStatus: order.paymentStatus?.toLowerCase() || "pending",
+        }));
+
+        setOrders(formattedOrders);
+        setError(null);
       } catch (err) {
-        console.error(err);
-        setError("Failed to load orders");
+        setError(
+          err.response?.data?.message ||
+            "Failed to load orders. Please try again later"
+        );
       } finally {
         setLoading(false);
       }
@@ -39,24 +56,6 @@ const MyOrder = () => {
   }, [user?.email]);
 
   const statusStyles = {
-    processing: {
-      color: "text-blue-400",
-      bg: "bg-blue-900/30",
-      icon: <FiClock />,
-      label: "Processing",
-    },
-    outForDelivery: {
-      color: "text-blue-300",
-      bg: "bg-blue-800/30",
-      icon: <FiTruck />,
-      label: "Out for Delivery",
-    },
-    delivered: {
-      color: "text-blue-500",
-      bg: "bg-blue-900/40",
-      icon: <FiCheckCircle />,
-      label: "Delivered",
-    },
     pending: {
       color: "text-blue-300",
       bg: "bg-blue-800/30",
@@ -78,11 +77,6 @@ const MyOrder = () => {
           label: "COD",
           class: "bg-blue-700/30 text-blue-300 border border-blue-500/40",
         };
-      case "upi":
-        return {
-          label: "UPI",
-          class: "bg-blue-600/30 text-blue-300 border border-blue-500/40",
-        };
       default:
         return {
           label: "Online",
@@ -91,9 +85,12 @@ const MyOrder = () => {
     }
   };
 
+  if (error) return null;
+
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="mx-auto max-w-7xl">
+
         {/* TOP BAR */}
         <div className="flex justify-between items-center mb-6">
           <Link
@@ -109,74 +106,49 @@ const MyOrder = () => {
           </span>
         </div>
 
-        {/* ORDER HISTORY */}
+        {/* PAGE HEADING */}
+        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          Order History
+        </h2>
+
+        {/* TABLE CARD */}
         <div className="bg-[#1e293b]/80 backdrop-blur-sm rounded-3xl p-8 border border-blue-500/20 shadow-xl">
-          <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-            Order History
-          </h2>
 
-          {/* LOADING INSIDE CARD */}
-          {loading && (
-            <p className="text-center text-blue-300">
-              Loading orders...
-            </p>
-          )}
-
-          {/* ERROR */}
-          {error && (
-            <p className="text-center text-blue-400">
-              {error}
-            </p>
-          )}
-
-          {/* NO USER */}
-          {!user?.email && (
-            <p className="text-center text-blue-300">
-              Please log in to view your orders.
-            </p>
-          )}
-
-          {/* EMPTY */}
-          {!loading && user?.email && orders.length === 0 && (
-            <p className="text-center text-blue-300">
-              No orders found.
-            </p>
-          )}
-
-          {/* TABLE */}
           {!loading && orders.length > 0 && (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-blue-900/40">
-                  <tr>
-                    <th className="p-4 text-left text-blue-400">Order ID</th>
-                    <th className="p-4 text-left text-blue-400">Customer</th>
-                    <th className="p-4 text-left text-blue-400">Address</th>
-                    <th className="p-4 text-left text-blue-400">Items</th>
-                    <th className="p-4 text-center text-blue-400">Total</th>
-                    <th className="p-4 text-left text-blue-400">Price</th>
-                    <th className="p-4 text-left text-blue-400">Payment</th>
-                    <th className="p-4 text-left text-blue-400">Payment Status</th>
-                    <th className="p-4 text-left text-blue-400">Order Status</th>
+
+                {/* ✅ ONLY COLUMN HEADERS (NO DATA ROW ABOVE) */}
+                <thead>
+                  <tr className="bg-blue-800/30">
+                    <th className="p-4 text-blue-400">Customer ID</th>
+                    <th className="p-4 text-blue-400">Customer</th>
+                    <th className="p-4 text-blue-400">Address</th>
+                    <th className="p-4 text-blue-400 text-center">Order</th>
+                    <th className="p-4 text-blue-400">Price</th>
+                    <th className="p-4 text-blue-400">Payment Type</th>
+                    <th className="p-4 text-blue-400">Payment Status</th>
                   </tr>
                 </thead>
 
+                {/* ORDERS */}
                 <tbody>
                   {orders.map((order) => {
-                    const items = order.items || [];
-                    const totalItems = items.reduce(
-                      (s, i) => s + i.quantity,
+                    const totalItems = order.items.reduce(
+                      (sum, item) => sum + item.quantity,
                       0
                     );
 
-                    const paymentMethod = getPaymentMethodDetails(
-                      order.paymentMethod
-                    );
+                    const totalPrice =
+                      order.total ??
+                      order.items.reduce(
+                        (sum, item) =>
+                          sum + item.item.price * item.quantity,
+                        0
+                      );
 
-                    const orderStatus =
-                      statusStyles[order.status] ||
-                      statusStyles.processing;
-
+                    const paymentMethod =
+                      getPaymentMethodDetails(order.paymentMethod);
                     const paymentStatus =
                       statusStyles[order.paymentStatus] ||
                       statusStyles.pending;
@@ -184,57 +156,58 @@ const MyOrder = () => {
                     return (
                       <tr
                         key={order._id}
-                        className="border-b border-blue-500/20 hover:bg-blue-900/20 transition"
+                        className="border-b border-blue-500/20 hover:bg-[#3a2b2b]/40"
                       >
-                        <td className="p-4 text-blue-100 font-mono text-sm">
-                          {order._id}
-                        </td>
-
-                        <td className="p-4 text-blue-100">
-                          {order.firstName} {order.lastName}
-                        </td>
-
-                        <td className="p-4 text-blue-300">
-                          {order.address}
-                        </td>
-
-                        <td className="p-4 text-blue-200">
-                          {items.map((i) => (
-                            <div key={i._id}>
-                              {i.item.name} × {i.quantity}
-                            </div>
-                          ))}
-                        </td>
-
-                        <td className="p-4 text-center text-blue-300">
-                          {totalItems}
-                        </td>
-
-                        <td className="p-4 text-blue-100">
-                          ₹{order.total}
+                        <td className="p-4 text-blue-100 font-mono">
+                          {order._id?.slice(-8)}
                         </td>
 
                         <td className="p-4">
-                          <span className={`px-3 py-1 rounded-full text-xs ${paymentMethod.class}`}>
+                          <p className="text-blue-100">
+                            {order.firstName} {order.lastName}
+                          </p>
+                          <p className="text-sm text-blue-400/60">
+                            {order.phone}
+                          </p>
+                        </td>
+
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <FiMapPin className="text-blue-400" />
+                            <span className="text-blue-100/80 text-sm">
+                              {order.address}, {order.city} - {order.zipCode}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="p-4 text-center text-blue-100">
+                          {totalItems}
+                        </td>
+
+                        <td className="p-4 text-blue-100 font-semibold">
+                          ₹{totalPrice}
+                        </td>
+
+                        <td className="p-4">
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm border ${paymentMethod.class}`}
+                          >
                             {paymentMethod.label}
                           </span>
                         </td>
 
                         <td className="p-4">
-                          <span className={`${paymentStatus.bg} ${paymentStatus.color} px-3 py-1 rounded-full text-xs`}>
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm ${paymentStatus.bg} ${paymentStatus.color}`}
+                          >
                             {paymentStatus.label}
-                          </span>
-                        </td>
-
-                        <td className="p-4">
-                          <span className={`${orderStatus.bg} ${orderStatus.color} px-3 py-1 rounded-full text-xs`}>
-                            {orderStatus.label}
                           </span>
                         </td>
                       </tr>
                     );
                   })}
                 </tbody>
+
               </table>
             </div>
           )}
