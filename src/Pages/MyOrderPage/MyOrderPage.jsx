@@ -1,12 +1,14 @@
 import React from 'react'
+import MyOrder from '../../Components/MyOrder/MyOrder'
+
+
 import Navbar from '../../Components/Navbar/Navbar'
 import Footer from '../../Components/Footer/Footer'
-import Checkout from '../../Components/Checkout/Checkout'
 const MyOrderPage = () => {
   return (
     <div>
       <Navbar/>
-      <Checkout/>
+      <MyOrder/>
       <Footer/>
     </div>
   )
