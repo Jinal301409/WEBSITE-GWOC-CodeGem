@@ -129,7 +129,7 @@ const About = () => {
         </a>
 
         <a
-          href="https://www.facebook.com/61563097423968/videos/chat-with-us/774850761567961/"
+          href="https://www.facebook.com/share/1GDgBNrUmw/"
           target="_blank"
           rel="noreferrer"
           className="hover:text-white transition">
