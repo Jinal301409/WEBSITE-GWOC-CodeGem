@@ -39,7 +39,7 @@ const App = () => {
         }
       />
 
-      {/* ✅ EXISTING ROUTE */}
+      {/*EXISTING ROUTE */}
       <Route
         path='/myorder'
         element={
@@ -49,7 +49,7 @@ const App = () => {
         }
       />
 
-      {/* ✅ NEW ROUTE (FIXES STRIPE REDIRECT) */}
+      {/*NEW ROUTE (FIXES STRIPE REDIRECT) */}
       <Route
         path='/my-orders'
         element={
