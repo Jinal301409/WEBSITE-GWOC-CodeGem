@@ -129,7 +129,7 @@ const About = () => {
         </a>
 
         <a
-          href="https://www.facebook.com/share/1GDgBNrUmw/"
+          href="https://www.facebook.com/people/Chill-thrive/61563097423968/?rdid=pIfv1k4R8BF0gbi4&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1GDgBNrUmw%2F"
           target="_blank"
           rel="noreferrer"
           className="hover:text-white transition">
