@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react"; // ✅ useEffect added
+import axios from "axios"; // ✅ axios added
 import { useCart } from "../../CartContext/CartContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -7,43 +8,47 @@ const VerifyPaymentPage = () => {
   const { search } = useLocation();
   const navigate = useNavigate();
   const [statusMsg, setStatusMsg] = useState("Verifying Payment...");
+  const verifyStarted = useRef(false);
 
   // GRAB TOKEN
   const token = localStorage.getItem("authToken");
-  const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
   useEffect(() => {
-    const params = new URLSearchParams(search);
-    const paymentStatus = params.get('success');
-    const sessionId = params.get('session_id');
+    if (verifyStarted.current) return;
+    verifyStarted.current = true;
 
-    //MISSING OR CANCELLED
-    if(success !== 'true' || !session_id) {
-      if(success === 'false') {
-        navigate('/checkout', { replace: true })
+    const params = new URLSearchParams(search);
+    const paymentStatus = params.get("success"); // ✅ correct variable
+    const sessionId = params.get("session_id");  // ✅ correct variable
+
+    // MISSING OR CANCELLED
+    if (paymentStatus !== "true" || !sessionId) {
+      if (paymentStatus === "false") {
+        navigate("/checkout", { replace: true });
         return;
       }
-      setStatusMsg('Payment failed but order placed for completion')
+      setStatusMsg("Payment failed but order placed for completion");
       return;
     }
 
-    // STRIPE SUCCESS = TRUE
-    axios.get("http://localhost:4000/api/orders/confirm", {
-      params: { session_id },
-      headers: authHeaders
-    })
+    const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
+
+    // STRIPE SUCCESS
+    axios
+      .get("http://localhost:4000/api/orders/confirm", {
+        params: { session_id: sessionId }, // ✅ correct param
+        headers: authHeaders,
+      })
       .then(() => {
         clearCart();
-        navigate('/myorder', { replace: true });
+        navigate("/myorders", { replace: true });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Confirmation error:", err);
-        setStatusMsg("There was an error");
+        setStatusMsg("There was an error verifying payment");
         clearCart(false);
       });
-
-
-  }, [search, clearCart, navigate, authHeaders])
+  }, [search, clearCart, navigate, token]);
 
   return (
     <div className="min-h-screen flex items-center justify-center text-white">
