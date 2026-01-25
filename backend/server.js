@@ -25,7 +25,7 @@ connectDB()
 //MIDDLEWARE
 app.use(cors({
     origin: (origin, callback) => {
-        const allowedOrigins = ['https://website-gwoc-codegem.onrender.com', 'https://website-gwoc-codegem-admin.onrender.com/']
+        const allowedOrigins = ['https://website-gwoc-codegem.onrender.com', 'https://website-gwoc-codegem-admin.onrender.com']
         if(!origin || allowedOrigins.includes(origin)) {
             callback(null, true)
         }
