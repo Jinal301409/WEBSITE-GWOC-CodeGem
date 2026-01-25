@@ -60,7 +60,7 @@ const AddItems = () => {
     if (formData.image) payload.append('image', formData.image);
 
     const res = await axios.post(
-      "http://localhost:4000/api/items",
+      "https://website-gwoc-codegem-backend.onrender.com/api/items",
       payload
     );
 

@@ -18,12 +18,12 @@ const buildImageUrl = (raw) => {
     const uploadsIndex = normalized.indexOf("/uploads/");
     if (uploadsIndex !== -1) {
       const filename = normalized.slice(uploadsIndex + "/uploads/".length);
-      return `http://localhost:4000/uploads/${filename}`;
+      return `https://website-gwoc-codegem-backend.onrender.com/uploads/${filename}`;
     }
     if (normalized.startsWith("uploads/"))
-      return `http://localhost:4000/${normalized}`;
+      return `https://website-gwoc-codegem-backend.onrender.com/${normalized}`;
     if (!normalized.includes("/"))
-      return `http://localhost:4000/uploads/${normalized}`;
+      return `https://website-gwoc-codegem-backend.onrender.com/uploads/${normalized}`;
     return normalized;
   } catch {
     return PLACEHOLDER;
@@ -46,7 +46,7 @@ const OurHomeMenu = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/items")
+      .get("https://website-gwoc-codegem-backend.onrender.com/api/items")
       .then((res) => {
         // support responses where data is array or { data: [...] }
         const raw = Array.isArray(res.data)

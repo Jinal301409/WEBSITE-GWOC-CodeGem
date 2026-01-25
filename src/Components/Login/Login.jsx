@@ -4,7 +4,7 @@ import { iconClass, inputBase } from '../../assets/dummydata';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const url = "http://localhost:4000";
+const url = "https://website-gwoc-codegem-backend.onrender.com";
 
 const Login = ({ onLoginSuccess, onClose }) => {
   const [showToast, setShowToast] = useState(false);
@@ -25,7 +25,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${url}/api/user/login`, {
+      const res = await axios.post(`${url}https://website-gwoc-codegem-backend.onrender.com/api/user/login`, {
         email: formData.email, 
         password: formData.password,
       });

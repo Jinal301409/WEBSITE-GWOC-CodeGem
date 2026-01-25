@@ -20,12 +20,12 @@ const buildImageUrl = (raw) => {
     const uploadsIndex = normalized.indexOf('/uploads/');
     if (uploadsIndex !== -1) {
       const filename = normalized.slice(uploadsIndex + '/uploads/'.length);
-      return `http://localhost:4000/uploads/${filename}`;
+      return `https://website-gwoc-codegem-backend.onrender.com/uploads/${filename}`;
     }
     // if it starts with uploads/
-    if (normalized.startsWith('uploads/')) return `http://localhost:4000/${normalized}`;
+    if (normalized.startsWith('uploads/')) return `https://website-gwoc-codegem-backend.onrender.com/${normalized}`;
     // if seems like a filename (no slash) assume uploads
-    if (!normalized.includes('/')) return `http://localhost:4000/uploads/${normalized}`;
+    if (!normalized.includes('/')) return `https://website-gwoc-codegem-backend.onrender.com/uploads/${normalized}`;
     // otherwise try to return as-is
     return normalized;
   } catch {
@@ -43,7 +43,7 @@ const OurMenu = () => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/items');
+        const response = await axios.get('https://website-gwoc-codegem-backend.onrender.com/api/items');
         // Support both: response.data is an array OR response.data.data contains the array
         const raw = Array.isArray(response.data) ? response.data : (response.data && Array.isArray(response.data.data) ? response.data.data : []);
 

@@ -17,7 +17,7 @@ const MyOrder = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/orders",
+          "https://website-gwoc-codegem-backend.onrender.com/api/orders",
           {
             params: { email: user?.email },
             headers: {

@@ -35,7 +35,7 @@ const VerifyPaymentPage = () => {
 
     // STRIPE SUCCESS
     axios
-      .get("http://localhost:4000/api/orders/confirm", {
+      .get("https://website-gwoc-codegem-backend.onrender.com/api/orders/confirm", {
         params: { session_id: sessionId }, // ✅ correct param
         headers: authHeaders,
       })

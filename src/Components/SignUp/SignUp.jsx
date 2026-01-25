@@ -36,7 +36,7 @@ useEffect(() => {
     console.log('Sign up fired:', formData);
     try {
         // POST to relative API endpoint - Vite proxy will forward to backend in dev
-        const res = await axios.post('http://localhost:4000/api/user/register', formData);
+        const res = await axios.post('https://website-gwoc-codegem-backend.onrender.com/api/user/register', formData);
         console.log('Register Response:', res.data);
 
         // assume backend returns { success: true, token: '...' } or similar

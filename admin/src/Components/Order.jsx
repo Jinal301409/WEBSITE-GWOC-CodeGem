@@ -20,7 +20,7 @@ const Order = () => {
 
     // Candidate base URLs: Vite env, explicit localhost, and relative path
     const envBase = (import.meta && import.meta.env && import.meta.env.VITE_API_URL) || null;
-    const bases = [envBase, 'http://localhost:4000', ''].filter(Boolean);
+    const bases = [envBase, 'https://website-gwoc-codegem-backend.onrender.com/api/orders/getall', ''].filter(Boolean);
 
     let lastError = null;
 
@@ -30,7 +30,7 @@ const Order = () => {
       for (let attempt = 1; attempt <= maxAttempts && mounted; attempt++) {
         try {
           const token = localStorage.getItem('token');
-          const url = base ? `${base}/api/orders/getall` : '/api/orders/getall';
+          const url = base ? `${base}https://website-gwoc-codegem-backend.onrender.com/api/orders/getall` : 'https://website-gwoc-codegem-backend.onrender.com/api/orders/getall';
           const response = await axios.get(url, token ? { headers: { Authorization: `Bearer ${token}` } } : undefined);
 
           const formatted = (response.data || []).map(order => ({
@@ -66,7 +66,7 @@ const Order = () => {
       const msg = lastError?.message || 'Failed to load orders.';
       const isConnRefused = lastError && (lastError.code === 'ECONNREFUSED' || /ECONNREFUSED/.test(lastError.message) || /Network Error/.test(lastError.message));
       setError(isConnRefused
-        ? 'Cannot reach backend at http://localhost:4000. Start the backend (cd backend && npm run dev) then reload.'
+        ? 'Cannot reach backend at https://website-gwoc-codegem-backend.onrender.com. Start the backend (cd backend && npm run dev) then reload.'
         : (lastError?.response?.data?.message || msg));
       setLoading(false);
     }
@@ -79,7 +79,7 @@ const Order = () => {
 const handleStatusChange = async (orderId, newStatus) => {
   try {
     await axios.put(
-      `http://localhost:4000/api/orders/getall/${orderId}`,
+      `https://website-gwoc-codegem-backend.onrender.com/api/orders/getall/${orderId}`,
       { status: newStatus });
 
     setOrders(
@@ -175,7 +175,7 @@ return (
   <div className="w-10 h-10 rounded-lg bg-blue-900/40 flex items-center justify-center">
   {itm.item?.imageUrl ? (
     <img
-      src={`http://localhost:4000/uploads/${itm.item.imageUrl}`}
+      src={`https://website-gwoc-codegem-backend.onrender.com/uploads/${itm.item.imageUrl}`}
       alt={itm.item?.name}
       onError={(e) => {
         e.currentTarget.style.display = 'none';

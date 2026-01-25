@@ -89,7 +89,7 @@ export const CartProvider = ({ children }) => {
     if (!token) return;
 
     axios
-      .get('/api/cart', {
+      .get('https://website-gwoc-codegem-backend.onrender.com/api/cart', {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -126,7 +126,7 @@ export const CartProvider = ({ children }) => {
     try {
       if (item._id) {
         await axios.post(
-          '/api/cart',
+          'https://website-gwoc-codegem-backend.onrender.com/api/cart',
           { itemId: item._id, quantity: qty },
           {
             withCredentials: true,
@@ -148,7 +148,7 @@ export const CartProvider = ({ children }) => {
     try {
       // Only call API if it looks like a MongoDB ID (usually 24 hex chars) or if we know it's a backend item
       if (typeof id === 'string' && id.length === 24) {
-        await axios.delete(`/api/cart/${id}`, {
+        await axios.delete(`https://website-gwoc-codegem-backend.onrender.com/api/cart/${id}`, {
           withCredentials: true,
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -164,7 +164,7 @@ export const CartProvider = ({ children }) => {
     try {
       if (typeof id === 'string' && id.length === 24) {
         await axios.put(
-          `/api/cart/${id}`,
+          `https://website-gwoc-codegem-backend.onrender.com/api/cart/${id}`,
           { quantity: qty },
           {
             withCredentials: true,
@@ -182,7 +182,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       await axios.post(
-        `/api/cart/clear`,
+        `https://website-gwoc-codegem-backend.onrender.com/api/cart/clear`,
         {},
         {
           withCredentials: true,
