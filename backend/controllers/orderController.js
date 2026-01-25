@@ -1,6 +1,6 @@
-import Stripe from 'stripe';
-import Order from '../modals/orderModal.js';
-import 'dotenv/config';
+import Stripe from "stripe";
+import Order from "../modals/orderModal.js";
+import "dotenv/config";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -25,20 +25,22 @@ export const createOrder = async (req, res) => {
     } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ message: 'Invalid or empty items array' });
+      return res.status(400).json({ message: "Invalid or empty items array" });
     }
 
-    const orderItems = items.map(({ item, name, price, imageUrl, quantity }) => {
-      const base = item || {};
-      return {
-        item: {
-          name: base.name || name || 'unknown',
-          price: Number(base.price ?? price ?? 0),
-          imageUrl: base.imageUrl || imageUrl || '',
-        },
-        quantity: Number(quantity) || 1,
-      };
-    });
+    const orderItems = items.map(
+      ({ item, name, price, imageUrl, quantity }) => {
+        const base = item || {};
+        return {
+          item: {
+            name: base.name || name || "unknown",
+            price: Number(base.price ?? price ?? 0),
+            imageUrl: base.imageUrl || imageUrl || "",
+          },
+          quantity: Number(quantity) || 1,
+        };
+      }
+    );
 
     const shippingCost = 0;
     let newOrder;
@@ -46,21 +48,24 @@ export const createOrder = async (req, res) => {
     // ===============================
     // ONLINE PAYMENT (STRIPE)
     // ===============================
-    if (paymentMethod === 'online') {
+    if (paymentMethod === "online") {
       const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        mode: 'payment',
-        line_items: orderItems.map(o => ({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items: orderItems.map((o) => ({
           price_data: {
-            currency: 'inr',
+            currency: "inr",
             product_data: { name: o.item.name },
             unit_amount: Math.round(o.item.price * 100),
           },
           quantity: o.quantity,
         })),
         customer_email: email,
-        success_url: `${process.env.FRONTEND_URL}/checkout?payment_status=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.FRONTEND_URL}/checkout?payment_status=cancel`,
+
+        // ✅ CORRECT STRIPE REDIRECT URL
+        success_url: `${process.env.BACKEND_URL}/api/orders/verify?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.BACKEND_URL}/api/orders/verify?success=false`,
+
         metadata: { firstName, lastName, email, phone },
       });
 
@@ -81,11 +86,15 @@ export const createOrder = async (req, res) => {
         items: orderItems,
         sessionId: session.id,
         paymentIntentId: session.payment_intent || null,
-        paymentStatus: 'pending',
+        paymentStatus: "pending",
       });
 
       await newOrder.save();
-      return res.status(201).json({ order: newOrder, checkoutUrl: session.url });
+
+      return res.status(201).json({
+        order: newOrder,
+        checkoutUrl: session.url,
+      });
     }
 
     // ===============================
@@ -106,48 +115,78 @@ export const createOrder = async (req, res) => {
       total,
       shipping: shippingCost,
       items: orderItems,
-      paymentStatus: 'pending',
+      paymentStatus: "pending",
     });
 
     await newOrder.save();
-    return res.status(201).json({ order: newOrder, checkoutUrl: null });
+    res.status(201).json({ order: newOrder, checkoutUrl: null });
   } catch (error) {
-    console.error('CreateOrder Error:', error);
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    console.error("CreateOrder Error:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
 // ===============================
-// CONFIRM PAYMENT (FIXED)
+// CONFIRM PAYMENT (API / WEBHOOK)
 // ===============================
 export const confirmPayment = async (req, res) => {
   try {
     const session_id = req.body.sessionId || req.query.session_id;
 
     if (!session_id) {
-      return res.status(400).json({ message: 'session_id required' });
+      return res.status(400).json({ message: "session_id required" });
     }
 
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
-    if (session.payment_status === 'paid') {
+    if (session.payment_status === "paid") {
       const order = await Order.findOneAndUpdate(
         { sessionId: session_id },
-        { paymentStatus: 'succeeded' },
+        { paymentStatus: "succeeded" },
         { new: true }
       );
 
       if (!order) {
-        return res.status(404).json({ message: 'Order not found' });
+        return res.status(404).json({ message: "Order not found" });
       }
 
       return res.json({ order });
     }
 
-    return res.status(400).json({ message: 'Payment not completed' });
+    res.status(400).json({ message: "Payment not completed" });
   } catch (error) {
-    console.error('confirmPayment error:', error);
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    console.error("confirmPayment Error:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+// ===============================
+// VERIFY PAYMENT (STRIPE REDIRECT)
+// ===============================
+export const verifyPayment = async (req, res) => {
+  try {
+    const { success, session_id } = req.query;
+
+    if (success !== "true" || !session_id) {
+      return res.redirect(`${process.env.FRONTEND_URL}/payment-failed`);
+    }
+
+    const session = await stripe.checkout.sessions.retrieve(session_id);
+
+    if (session.payment_status === "paid") {
+      await Order.findOneAndUpdate(
+        { sessionId: session_id },
+        { paymentStatus: "succeeded" }
+      );
+
+      // ✅ REDIRECT TO MY ORDERS PAGE
+      return res.redirect(`${process.env.FRONTEND_URL}/my-orders`);
+    }
+
+    res.redirect(`${process.env.FRONTEND_URL}/payment-failed`);
+  } catch (error) {
+    console.error("verifyPayment Error:", error);
+    res.redirect(`${process.env.FRONTEND_URL}/payment-failed`);
   }
 };
 
@@ -156,17 +195,13 @@ export const confirmPayment = async (req, res) => {
 // ===============================
 export const getOrders = async (req, res) => {
   try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-
     const orders = await Order.find({ user: req.user._id })
       .sort({ createdAt: -1 })
       .lean();
 
     res.json(orders);
   } catch {
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -181,8 +216,8 @@ export const getAllOrders = async (req, res) => {
 
     res.json(orders);
   } catch (error) {
-    console.error('getAllOrders Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    console.error("getAllOrders Error:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -191,20 +226,19 @@ export const getAllOrders = async (req, res) => {
 // ===============================
 export const updateAnyOrder = async (req, res) => {
   try {
-    const updated = await Order.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const updated = await Order.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!updated) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
 
     res.json(updated);
   } catch (error) {
-    console.error('updateAnyOrder Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    console.error("updateAnyOrder Error:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -216,17 +250,17 @@ export const getOrderById = async (req, res) => {
     const order = await Order.findById(req.params.id);
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
 
-    if (order.user && req.user && !order.user.equals(req.user._id)) {
-      return res.status(403).json({ message: 'Access Denied' });
+    if (order.user && !order.user.equals(req.user._id)) {
+      return res.status(403).json({ message: "Access Denied" });
     }
 
     res.json(order);
   } catch (error) {
-    console.error('getOrderById Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    console.error("getOrderById Error:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -238,22 +272,20 @@ export const updateOrder = async (req, res) => {
     const order = await Order.findById(req.params.id);
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
 
     if (!order.user.equals(req.user._id)) {
-      return res.status(403).json({ message: 'Access Denied' });
+      return res.status(403).json({ message: "Access Denied" });
     }
 
-    const updated = await Order.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const updated = await Order.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
     res.json(updated);
   } catch (error) {
-    console.error('updateOrder Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    console.error("updateOrder Error:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 };
