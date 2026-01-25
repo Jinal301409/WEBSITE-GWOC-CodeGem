@@ -25,12 +25,11 @@ const App = () => {
 
       {/* PAYMENT VERIFICATION */}
       <Route path='/myorder/verify' element={<VerifyPaymentPage />} />
+
       <Route path='/aware' element={<AwarenessPage />} />
       <Route path='/photo' element={<Events />} />
-
       <Route path='/cart' element={<Cart />} />
 
-      
       <Route
         path='/checkout'
         element={
@@ -39,8 +38,20 @@ const App = () => {
           </PrivateRoute>
         }
       />
+
+      {/*EXISTING ROUTE */}
       <Route
         path='/myorder'
+        element={
+          <PrivateRoute>
+            <MyOrderPage />
+          </PrivateRoute>
+        }
+      />
+
+      {/*NEW ROUTE (FIXES STRIPE REDIRECT) */}
+      <Route
+        path='/my-orders'
         element={
           <PrivateRoute>
             <MyOrderPage />
