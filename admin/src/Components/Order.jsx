@@ -6,10 +6,11 @@ import axios from 'axios';
 const Order = () => {
 
   const [orders, setOrders] = useState([])
-const [loading, setLoading] = useState(true)
-const [error, setError] = useState(null)
-
-useEffect(() => {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [apiBase, setApiBase] = useState('');
+  
+  useEffect(() => {
   let mounted = true;
 
   const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -46,6 +47,7 @@ useEffect(() => {
 
           if (!mounted) return;
           setOrders(formatted);
+          setApiBase(base); // Store the working base URL
           setError(null);
           setLoading(false);
           return;
@@ -169,8 +171,31 @@ return (
       <div
         key={idx}
         className="flex items-center gap-3 p-2 rounded-lg text-amber-100/80 text-sm max-w-[200px]">
-        <img src={itm.item?.imageUrl ? `http://localhost:4000${itm.item.imageUrl}` : ''} alt={itm.item?.name || ''} 
-        className=' w-10 h-10 object-cover rounded-lg' />
+        <div className="w-10 h-10 rounded-lg bg-blue-900/40 flex items-center justify-center">
+  <div className="w-10 h-10 rounded-lg bg-blue-900/40 flex items-center justify-center">
+  {itm.item?.imageUrl ? (
+    <img
+      src={`http://localhost:4000/uploads/${itm.item.imageUrl}`}
+      alt={itm.item?.name}
+      onError={(e) => {
+        e.currentTarget.style.display = 'none';
+        e.currentTarget.nextSibling.style.display = 'block';
+      }}
+      className="w-10 h-10 object-cover rounded-lg"
+    />
+  ) : null}
+
+  <FiBox
+    className="text-blue-400 text-lg"
+    style={{ display: 'none' }}
+  />
+</div>
+
+</div>
+
+
+
+
         <div className=' flex-1'>
 <span className=' text-white text-sm block
 truncate'>
@@ -178,8 +203,6 @@ truncate'>
 </span>
 <div className=' flex items-center gap-2 text-xs text-blue-400/60' >
 <span>₹{(itm.item?.price || 0).toFixed(2)}</span>
-<span>&dot;</span>
-<span>x{itm.quantity || 0}</span>
 </div>
 </div>
       </div>
@@ -254,4 +277,3 @@ No orders found
 };
 
 export default Order;
-

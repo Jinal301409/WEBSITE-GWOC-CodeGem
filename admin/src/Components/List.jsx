@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { styles } from '../assets/dummyadmin';
 import { FiHeart, FiStar, FiTrash2 } from 'react-icons/fi';
 import axios from 'axios';
+import { dummyMenuData } from '../../../src/assets/OmhDD';
 const List = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,7 +10,22 @@ const List = () => {
     const fetchItems = async () => {
       try {
         const { data } = await axios.get('http://localhost:4000/api/items');
-        setItems(data);
+        // Build static items from dummyMenuData (category -> array)
+        const staticItems = Object.entries(dummyMenuData).flatMap(([category, arr]) =>
+          arr.map((it, idx) => ({
+            _id: `static-${category}-${idx}`,
+            name: it.name || it.title || '',
+            description: it.description || it.desc || '',
+            category,
+            price: it.price || it.cost || '',
+            rating: it.rating || 0,
+            hearts: it.hearts || 0,
+            imageUrl: it.image || it.imageUrl || ''
+          }))
+        );
+
+        // Combine backend items with static ones so admin list shows everything the site shows
+        setItems([...(Array.isArray(data) ? data : (data.data || [])), ...staticItems]);
       } catch (err) {
         console.error('Error fetching items:', err);
       } finally {
@@ -25,6 +41,12 @@ const List = () => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
 
     try {
+      // If this is a static item (created from dummy data), just remove locally
+      if (String(itemId).startsWith('static-')) {
+        setItems((prev) => prev.filter((item) => item._id !== itemId));
+        return;
+      }
+
       await axios.delete(`http://localhost:4000/api/items/${itemId}`);
       setItems((prev) => prev.filter((item) => item._id !== itemId));
       console.log('Deleted item ID:', itemId);

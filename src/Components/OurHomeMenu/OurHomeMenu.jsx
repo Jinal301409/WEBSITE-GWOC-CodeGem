@@ -5,6 +5,31 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "./OurHomeMenu.css";
 
+// helper placeholder and URL builder
+const PLACEHOLDER = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='100%' height='100%' fill='%2310283a'/><text x='50%' y='50%' fill='%23cbd5e1' font-size='18' font-family='Arial' text-anchor='middle' dy='.3em'>Image not available</text></svg>`;
+
+const buildImageUrl = (raw) => {
+  if (!raw) return PLACEHOLDER;
+  try {
+    const s = String(raw).trim();
+    if (!s || s === "null") return PLACEHOLDER;
+    if (/^https?:\/\//i.test(s)) return s;
+    const normalized = s.replace(/\\/g, "/");
+    const uploadsIndex = normalized.indexOf("/uploads/");
+    if (uploadsIndex !== -1) {
+      const filename = normalized.slice(uploadsIndex + "/uploads/".length);
+      return `http://localhost:4000/uploads/${filename}`;
+    }
+    if (normalized.startsWith("uploads/"))
+      return `http://localhost:4000/${normalized}`;
+    if (!normalized.includes("/"))
+      return `http://localhost:4000/uploads/${normalized}`;
+    return normalized;
+  } catch {
+    return PLACEHOLDER;
+  }
+};
+
 const categories = [
   "Ice Bath Therapy",
   "Jacuzzi Therapy",
@@ -23,9 +48,35 @@ const OurHomeMenu = () => {
     axios
       .get("http://localhost:4000/api/items")
       .then((res) => {
-        const grouped = res.data.reduce((acc, item) => {
-          acc[item.category] = acc[item.category] || [];
-          acc[item.category].push(item);
+        // support responses where data is array or { data: [...] }
+        const raw = Array.isArray(res.data)
+          ? res.data
+          : res.data && Array.isArray(res.data.data)
+          ? res.data.data
+          : [];
+
+        // normalize item fields and build full image URL for uploads
+        const normalized = raw.map((item) => ({
+          _id: item._id || item.id,
+          title: item.title || item.name || "",
+          name: item.name || item.title || "",
+          description: item.description || "",
+          duration: item.duration || item.time || "",
+          benefits: item.benefits || item.tags || [],
+          price:
+            item.price != null
+              ? item.price
+              : item.cost != null
+              ? item.cost
+              : "",
+          // store raw image reference (filename or full URL)
+          image: item.imageUrl || item.image || '',
+          category: item.category || "",
+        }));
+
+        const grouped = normalized.reduce((acc, it) => {
+          acc[it.category] = acc[it.category] || [];
+          acc[it.category].push(it);
           return acc;
         }, {});
         setMenuData(grouped);
@@ -39,13 +90,14 @@ const OurHomeMenu = () => {
 
   // CART HELPERS
   const getCartEntry = (id) =>
-    cartItems.find((ci) => ci.item._id === id);
+    cartItems.find((ci) => {
+      const iid = ci?.item?._id || ci?.item?.id;
+      return iid === id;
+    });
 
-  const getQuantity = (id) =>
-    getCartEntry(id)?.quantity || 0;
+  const getQuantity = (id) => getCartEntry(id)?.quantity || 0;
 
-  const displayItems =
-    menuData?.[activeCategory]?.slice(0, 4) || [];
+  const displayItems = menuData?.[activeCategory]?.slice(0, 4) || [];
 
   if (loading) {
     return (
@@ -58,7 +110,6 @@ const OurHomeMenu = () => {
   return (
     <div className="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#1e40af] min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-
         {/* TITLE */}
         <h2 className="text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-600">
           <span className="font-dancingscript block text-5xl sm:text-6xl md:text-7xl mb-2">
@@ -93,7 +144,6 @@ const OurHomeMenu = () => {
             const qty = getQuantity(item._id);
             const cartEntry = getCartEntry(item._id);
 
-
             return (
               <div
                 key={item._id}
@@ -101,8 +151,12 @@ const OurHomeMenu = () => {
               >
                 <div className="h-48 flex items-center justify-center bg-white/10">
                   <img
-                    src={item.imageUrl}
+                    src={buildImageUrl(item.imageUrl || item.image)}
                     alt={item.title}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = PLACEHOLDER;
+                    }}
                     className="max-h-full max-w-full object-contain"
                   />
                 </div>
@@ -136,8 +190,8 @@ const OurHomeMenu = () => {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() =>
-                            quantity > 1
-                              ? updateQuantity(item._id, quantity - 1)
+                            qty > 1
+                              ? updateQuantity(item._id, qty - 1)
                               : removeFromCart(item._id)
                           }
                           className="w-8 h-8 rounded-full bg-blue-900/40 flex items-center justify-center"
@@ -145,9 +199,7 @@ const OurHomeMenu = () => {
                           <FaMinus className="text-white" />
                         </button>
 
-                        <span className="text-white w-6 text-center">
-                          {quantity}
-                        </span>
+                        <span className="text-white w-6 text-center">{qty}</span>
 
                         <button
                           onClick={() => addToCart(item, 1)}
@@ -180,7 +232,6 @@ const OurHomeMenu = () => {
             Explore Full Menu
           </Link>
         </div>
-
       </div>
     </div>
   );

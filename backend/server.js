@@ -44,8 +44,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use('/api/items', itemRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/orders', orderRouter)
-
-
 app.get('/', (req, res) => {
     res.send('API WORKING')
 })
