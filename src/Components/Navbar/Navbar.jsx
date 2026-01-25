@@ -82,8 +82,8 @@ const Navbar = () => {
     { name: 'Home', to: '/', icon: <FiHome /> },
     { name: 'Services', to: '/services', icon: <FiBook /> },
     { name: 'About', to: '/about', icon: <FiStar /> },
-    { name: 'Awareness Page', to: '/aware', icon: <FaFirefox /> },
-    { name: 'Photo Gallary/Events', to: '/photo', icon: <FiImage /> },
+    { name: 'Awareness', to: '/aware', icon: <FaFirefox /> },
+    { name: 'Photos', to: '/photo', icon: <FiImage /> },
     { name: 'Contact', to: '/contact', icon: <FiPhone /> },
     ...(isAuthenticated ? [
       { name: 'MyOrders', to: '/myorder', icon: <FiPackage /> }
