@@ -4,7 +4,17 @@ import { iconClass, inputBase } from '../../assets/dummydata';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const url = "https://website-gwoc-codegem-backend.onrender.com";
+// normalize VITE_API_URL and provide safe fallback
+const normalizeBase = (raw) => {
+  if (!raw) return '';
+  let s = String(raw).trim();
+  s = s.replace(/^"|"$/g, '').replace(/^'|'$/g, '');
+  if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
+  s = s.replace(/\/+$/, '');
+  return s;
+};
+
+const API_BASE = normalizeBase(import.meta?.env?.VITE_API_URL) || 'https://website-gwoc-codegem-backend.onrender.com';
 
 const Login = ({ onLoginSuccess, onClose }) => {
   const [showToast, setShowToast] = useState(false);
@@ -25,10 +35,10 @@ const Login = ({ onLoginSuccess, onClose }) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${url}https://website-gwoc-codegem-backend.onrender.com/api/user/login`, {
-        email: formData.email, 
+      const res = await axios.post(`${API_BASE}/api/user/login`, {
+        email: formData.email,
         password: formData.password,
-      });
+      }, { withCredentials: true });
 
       console.log('Axios Res:', res);
 
@@ -49,6 +59,11 @@ const Login = ({ onLoginSuccess, onClose }) => {
       }
     } catch (err) {
       console.error('Axios error:', err);
+      if (err.code === 'ERR_NETWORK' || (err.message && err.message.includes('Network Error'))) {
+        alert('Network error: cannot reach backend. Check VITE_API_URL and DNS.');
+      } else {
+        alert(err.response?.data?.message || err.message || 'Login failed');
+      }
       setShowToast(true);
       setTimeout(() => setShowToast(false), 2000);
     }
