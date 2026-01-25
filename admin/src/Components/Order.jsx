@@ -20,7 +20,7 @@ const Order = () => {
 
     // Candidate base URLs: Vite env, explicit localhost, and relative path
     const envBase = (import.meta && import.meta.env && import.meta.env.VITE_API_URL) || null;
-    const bases = [envBase, 'https://website-gwoc-codegem-backend.onrender.com/api/orders/getall', ''].filter(Boolean);
+    const bases = [envBase, 'https://website-gwoc-codegem-backend.onrender.com', ''].filter(Boolean);
 
     let lastError = null;
 
@@ -78,9 +78,16 @@ const Order = () => {
 }, []);
 const handleStatusChange = async (orderId, newStatus) => {
   try {
-    await axios.put(
-      `https://website-gwoc-codegem-backend.onrender.com/api/orders/getall/${orderId}`,
-      { status: newStatus });
+   await axios.put(
+  `https://website-gwoc-codegem-backend.onrender.com/api/orders/getall/${orderId}`,
+  { status: newStatus },
+  {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  }
+);
+
 
     setOrders(
       orders.map(o =>
