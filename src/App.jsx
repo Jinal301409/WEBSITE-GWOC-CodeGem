@@ -10,7 +10,6 @@ import SignUp from './Components/SignUp/SignUp';
 import AwarenessPage from './Pages/AwarenessPage/AwarenessPage';
 import Events from './Pages/Events/Events';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
-import FloatingParticle from './Components/FloatingParticle/FloatingParticle';
 import MyOrderPage from './Pages/MyOrderPage/MyOrderPage';
 import VerifyPaymentPage from './Pages/VerifyPaymentPage/VerifyPaymentPage';
 import CheckoutPage from './Pages/CheckoutPage/CheckoutPage';
@@ -18,7 +17,6 @@ import CheckoutPage from './Pages/CheckoutPage/CheckoutPage';
 const App = () => {
   return (
     <div className='relative'>
-    <FloatingParticle/>
     <Routes>
       <Route path='/' element={<Home />} />
       <Route path='/contact' element={<ContactPage />} />
