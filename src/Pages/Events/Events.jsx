@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Navbar from "../../Components/Navbar/Navbar";
+import Footer from "../../Components/Footer/Footer";
 
 // Black Bunny
 import bb1 from "../../assets/bb1.png";
@@ -65,6 +66,7 @@ const Events = () => {
     <>
       {/* ✅ NAVBAR ADDED HERE */}
       <Navbar />
+      
 
       {/* PAGE CONTENT */}
       <div className="min-h-screen bg-gradient-to-br from-[#020617] via-[#07172a] to-[#0b2a4a] text-white pt-32 px-6">
@@ -112,12 +114,16 @@ const Events = () => {
                   transition={{ delay: index * 0.06 }}
                   className="w-full h-56 object-cover rounded-2xl
                     shadow-xl shadow-black/40 hover:scale-105 transition"
+                  
                 />
+                
+              
               ))}
             </div>
           </div>
         ))}
       </div>
+      <Footer />
     </>
   );
 };
