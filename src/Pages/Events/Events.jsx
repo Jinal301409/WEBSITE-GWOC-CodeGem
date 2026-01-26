@@ -32,6 +32,7 @@ import sp3 from "../../assets/sp3.png";
 import sp4 from "../../assets/sp4.png";
 import sp5 from "../../assets/sp5.png";
 import sp6 from "../../assets/sp6.png";
+import Footer from "../../Components/Footer/Footer";
 
 const eventsData = [
   {
