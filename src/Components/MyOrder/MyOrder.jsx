@@ -88,7 +88,8 @@ const MyOrder = () => {
   if (error) return null;
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#1e40af]
+      py-16 px-4 sm:px-6 lg:px-8 font-[Poppins] relative overflow-hidden">
       <div className="mx-auto max-w-7xl">
 
         {/* TOP BAR */}
