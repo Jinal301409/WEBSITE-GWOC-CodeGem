@@ -3,8 +3,6 @@ import { FaArrowLeft, FaLock } from "react-icons/fa6";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useCart } from "../../CartContext/CartContext.jsx";
-import CalendarModal from './CalendarModal';
-import Confetti from '../Shared/Confetti';
 
 const Checkout = () => {
   const { cartItems, clearCart } = useCart();
@@ -28,9 +26,6 @@ const Checkout = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
 
   const token = localStorage.getItem("authToken");
   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
@@ -111,10 +106,6 @@ const Checkout = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleDateSelect = (isoDate) => {
-    setSelectedDate(isoDate);
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedDate || !selectedSlot)
@@ -158,11 +149,11 @@ const Checkout = () => {
         window.location.href = data.checkoutUrl;
       } else {
         // mark slot as booked locally so UI updates immediately
-        setBookedSlots(prev => Array.from(new Set([...(prev || []), selectedSlot])));
+        setBookedSlots((prev) =>
+          Array.from(new Set([...(prev || []), selectedSlot]))
+        );
         clearCart();
-        setShowToast(true);
-        setShowConfetti(true);
-        setTimeout(()=>{ setShowConfetti(false); setShowToast(false); navigate('/myorder', { state: { order: data.order } }) }, 1800);
+        navigate("/myorder", { state: { order: data.order } });
       }
     } catch (err) {
       console.error(err);
@@ -202,10 +193,13 @@ const Checkout = () => {
 
             <div>
               <label className="block mb-2">Select Date</label>
-              <div className="flex gap-2">
-                <input type="text" readOnly value={selectedDate} placeholder="Choose date" className="w-full px-4 py-3 rounded-xl bg-[#2a1e1e]" />
-                <button type="button" onClick={() => setShowCalendar(true)} className="px-4 py-3 bg-blue-600 rounded">Pick</button>
-              </div>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                min={new Date().toISOString().slice(0, 10)}
+                className="w-full px-4 py-3 rounded-xl bg-[#2a1e1e]"
+              />
             </div>
 
             <div>
@@ -273,10 +267,6 @@ const Checkout = () => {
             </button>
           </div>
         </form>
-
-        {showCalendar && <CalendarModal onClose={() => setShowCalendar(false)} onSelect={handleDateSelect} />}
-        {showToast && <div className="toast">Booking Confirmed!</div>}
-        {showConfetti && <Confetti />}
       </div>
     </div>
   );

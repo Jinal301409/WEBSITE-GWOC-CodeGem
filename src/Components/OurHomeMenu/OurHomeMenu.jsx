@@ -151,7 +151,6 @@ const OurHomeMenu = () => {
               >
                 <div className="h-48 flex items-center justify-center bg-white/10">
                   <img
-                    loading="lazy"
                     src={buildImageUrl(item.imageUrl || item.image)}
                     alt={item.title}
                     onError={(e) => {
@@ -162,7 +161,7 @@ const OurHomeMenu = () => {
                   />
                 </div>
 
-                <div className="p-4 flex flex-col flex-grow card-tilt">
+                <div className="p-4 flex flex-col flex-grow">
                   <h3 className="text-2xl mb-2 font-dancingscript text-blue-100">
                     {item.title}
                   </h3>

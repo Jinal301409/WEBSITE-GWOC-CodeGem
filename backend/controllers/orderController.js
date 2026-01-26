@@ -2,7 +2,6 @@ import Stripe from "stripe";
 import Order from "../modals/orderModal.js";
 import Item from "../modals/itemModal.js";
 import "dotenv/config";
-import mongoose from "mongoose";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -36,27 +35,8 @@ export const createOrder = async (req, res) => {
     }
 
     const bDate = new Date(bookingDate);
-    const start = new Date(
-      Date.UTC(
-        bDate.getUTCFullYear(),
-        bDate.getUTCMonth(),
-        bDate.getUTCDate(),
-        0,
-        0,
-        0
-      )
-    );
-    const end = new Date(
-      Date.UTC(
-        bDate.getUTCFullYear(),
-        bDate.getUTCMonth(),
-        bDate.getUTCDate(),
-        23,
-        59,
-        59,
-        999
-      )
-    );
+    const start = new Date(bDate.toISOString().slice(0, 10) + "T00:00:00.000Z");
+    const end = new Date(bDate.toISOString().slice(0, 10) + "T23:59:59.999Z");
 
     // check slot already booked
     const existing = await Order.findOne({
@@ -66,8 +46,82 @@ export const createOrder = async (req, res) => {
     if (existing)
       return res.status(409).json({ message: "Time slot already booked" });
 
-    // create order
-    const order = new Order({
+    const orderItems = items.map(
+      ({ item, name, price, imageUrl, quantity }) => {
+        const base = item || {};
+        return {
+          item: {
+            name: base.name || name || "unknown",
+            price: Number(base.price ?? price ?? 0),
+            imageUrl: base.imageUrl || imageUrl || "",
+          },
+          quantity: Number(quantity) || 1,
+        };
+      }
+    );
+
+    const shippingCost = 0;
+    let newOrder;
+
+    // ===============================
+    // ONLINE PAYMENT (STRIPE)
+    // ===============================
+    if (paymentMethod === "online") {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items: orderItems.map((o) => ({
+          price_data: {
+            currency: "inr",
+            product_data: { name: o.item.name },
+            unit_amount: Math.round(o.item.price * 100),
+          },
+          quantity: o.quantity,
+        })),
+        customer_email: email,
+
+        // ✅ CORRECT STRIPE REDIRECT URL
+        success_url: `${process.env.BACKEND_URL}/api/orders/verify?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.BACKEND_URL}/api/orders/verify?success=false`,
+
+        metadata: { firstName, lastName, email, phone },
+      });
+
+      newOrder = new Order({
+        user: req.user?._id,
+        firstName,
+        lastName,
+        phone,
+        email,
+        address,
+        city,
+        zipCode,
+        paymentMethod,
+        subtotal,
+        tax,
+        total,
+        shipping: shippingCost,
+        items: orderItems,
+        sessionId: session.id,
+        paymentIntentId: session.payment_intent || null,
+        paymentStatus: "pending",
+        bookingDate: bDate,
+        timeSlot,
+      });
+
+      await newOrder.save();
+
+      return res.status(201).json({
+        order: newOrder,
+        checkoutUrl: session.url,
+      });
+    }
+
+    // ===============================
+    // CASH ON DELIVERY
+    // ===============================
+    newOrder = new Order({
+      user: req.user?._id,
       firstName,
       lastName,
       phone,
@@ -75,35 +129,22 @@ export const createOrder = async (req, res) => {
       address,
       city,
       zipCode,
-      items: items.map((it) => ({
-        item: it.itemId ? mongoose.Types.ObjectId(it.itemId) : undefined,
-        name: it.name,
-        price: it.price,
-        quantity: it.quantity,
-        imageUrl: it.imageUrl,
-      })),
+      paymentMethod,
       subtotal,
       tax,
       total,
-      paymentMethod,
-      paymentStatus: paymentMethod === "online" ? "pending" : "succeeded",
+      shipping: shippingCost,
+      items: orderItems,
+      paymentStatus: "pending",
       bookingDate: bDate,
       timeSlot,
     });
 
-    await order.save();
-
-    if (paymentMethod === "online") {
-      return res.status(201).json({
-        order,
-        checkoutUrl: `/mock-checkout/${order._id}`,
-      });
-    }
-
-    res.status(201).json({ order });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    await newOrder.save();
+    res.status(201).json({ order: newOrder, checkoutUrl: null });
+  } catch (error) {
+    console.error("CreateOrder Error:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
@@ -288,38 +329,6 @@ export const getBookedSlots = async (req, res) => {
     const slots = orders.map((o) => o.timeSlot).filter(Boolean);
     res.json({ slots });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-// ===============================
-// GET MONTHLY HEATMAP DATA
-// ===============================
-export const getMonthlyHeatmap = async (req, res) => {
-  try {
-    const { month } = req.query; // expected YYYY-MM
-    if (!month)
-      return res.status(400).json({ message: "month required as YYYY-MM" });
-
-    const [y, m] = month.split("-").map(Number);
-    const start = new Date(Date.UTC(y, m - 1, 1));
-    const end = new Date(Date.UTC(y, m - 1 + 1, 0, 23, 59, 59, 999));
-
-    const agg = await Order.aggregate([
-      { $match: { bookingDate: { $gte: start, $lte: end } } },
-      {
-        $group: {
-          _id: { $dayOfMonth: "$bookingDate" },
-          count: { $sum: 1 },
-        },
-      },
-    ]);
-
-    const counts = {};
-    agg.forEach((a) => (counts[a._id] = a.count));
-    res.json({ counts });
-  } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
