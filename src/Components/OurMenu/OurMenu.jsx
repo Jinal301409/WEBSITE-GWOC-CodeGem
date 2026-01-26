@@ -129,7 +129,7 @@ const OurMenu = () => {
                     onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = PLACEHOLDER }}
                     className=' max-h-full max-w-full object-contain transition-all duration-700' />
                 </div>
-                <div className='p-4 sm:p-6 flex flex-col flex-grow reveal card-tilt'>
+                <div className='p-4 sm:p-6 flex flex-col flex-grow card-tilt'>
                   <div className='absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent opacity-50 transition-all duration-300' />
 
                   <h3 className='text-xl sm:text-2xl mb-2 font-dancingscript text-blue-100 transition-colors'>

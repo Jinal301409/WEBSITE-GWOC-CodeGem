@@ -162,7 +162,7 @@ const OurHomeMenu = () => {
                   />
                 </div>
 
-                <div className="p-4 flex flex-col flex-grow reveal card-tilt">
+                <div className="p-4 flex flex-col flex-grow card-tilt">
                   <h3 className="text-2xl mb-2 font-dancingscript text-blue-100">
                     {item.title}
                   </h3>
