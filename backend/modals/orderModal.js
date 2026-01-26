@@ -56,7 +56,11 @@ const orderSchema = new mongoose.Schema(
         index: true
     },
     expectedDelivery: Date,
-    delivered: Date
+    delivered: Date,
+
+    // booking fields
+    bookingDate: { type: Date },
+    timeSlot: { type: String },
 },
 { timestamps: true }
 );

@@ -8,6 +8,7 @@ import {
   getOrderById,
   updateAnyOrder,
   updateOrder,
+  getBookedSlots,
 } from "../controllers/orderController.js";
 import authMiddleware from "../middleware/auth.js";
 
@@ -41,5 +42,8 @@ orderRouter.post("/confirm", confirmPayment);
 // SINGLE ORDER
 orderRouter.get("/:id", getOrderById);
 orderRouter.put("/:id", updateOrder);
+
+// BOOKED SLOTS
+orderRouter.get("/slots", getBookedSlots);
 
 export default orderRouter;
