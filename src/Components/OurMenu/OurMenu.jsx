@@ -125,11 +125,11 @@ const OurMenu = () => {
                 className='relative bg-blue-900/20 rounded-2xl overflow-hidden border border-blue-800/30 backdrop-blur-sm flex flex-col transition-all duration-500'
                 style={{ '--index': i }}>
                 <div className='relative h-48 sm:h-56 md:h-60 flex items-center justify-center bg-white/10'>
-                  <img src={buildImageUrl(item.image || item.imageUrl)} alt={item.name}
+                  <img loading="lazy" src={buildImageUrl(item.image || item.imageUrl)} alt={item.name}
                     onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = PLACEHOLDER }}
                     className=' max-h-full max-w-full object-contain transition-all duration-700' />
                 </div>
-                <div className='p-4 sm:p-6 flex flex-col flex-grow'>
+                <div className='p-4 sm:p-6 flex flex-col flex-grow reveal card-tilt'>
                   <div className='absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent opacity-50 transition-all duration-300' />
 
                   <h3 className='text-xl sm:text-2xl mb-2 font-dancingscript text-blue-100 transition-colors'>

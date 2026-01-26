@@ -9,6 +9,7 @@ import {
   updateAnyOrder,
   updateOrder,
   getBookedSlots,
+  getMonthlyHeatmap,
 } from "../controllers/orderController.js";
 import authMiddleware from "../middleware/auth.js";
 
@@ -45,5 +46,8 @@ orderRouter.put("/:id", updateOrder);
 
 // BOOKED SLOTS
 orderRouter.get("/slots", getBookedSlots);
+
+// MONTHLY HEATMAP
+orderRouter.get("/heatmap", getMonthlyHeatmap);
 
 export default orderRouter;
