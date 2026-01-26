@@ -79,18 +79,26 @@ const Checkout = () => {
 
   useEffect(() => {
     if (!selectedDate) return;
+    let mounted = true;
     const fetch = async () => {
       try {
         const resp = await axios.get(
           "https://website-gwoc-codegem-backend.onrender.com/api/orders/slots",
           { params: { date: selectedDate } }
         );
+        if (!mounted) return;
         setBookedSlots(resp.data.slots || []);
       } catch (err) {
         console.error(err);
       }
     };
+
     fetch();
+    const id = setInterval(fetch, 10000); // refresh every 10s
+    return () => {
+      mounted = false;
+      clearInterval(id);
+    };
   }, [selectedDate]);
 
   const handleInputChange = (e) => {
@@ -140,6 +148,10 @@ const Checkout = () => {
       if (formData.paymentMethod === "online") {
         window.location.href = data.checkoutUrl;
       } else {
+        // mark slot as booked locally so UI updates immediately
+        setBookedSlots((prev) =>
+          Array.from(new Set([...(prev || []), selectedSlot]))
+        );
         clearCart();
         navigate("/myorder", { state: { order: data.order } });
       }
@@ -210,6 +222,7 @@ const Checkout = () => {
                       }`}
                     >
                       {s}
+                      {disabled && " (Booked)"}
                     </button>
                   );
                 })}
