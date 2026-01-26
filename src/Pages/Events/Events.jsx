@@ -77,8 +77,7 @@ const Events = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-5xl mx-auto text-center mb-20"
-        >
+          className="max-w-5xl mx-auto text-center mb-20">
           <h1 className="text-5xl md:text-6xl font-bold mb-4">
             Photo Gallery <span className="text-blue-400">/ Events</span>
           </h1>
@@ -94,8 +93,7 @@ const Events = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl font-bold mb-4 text-blue-400"
-            >
+              className="text-4xl font-bold mb-4 text-blue-400">
               {event.title}
             </motion.h2>
 
