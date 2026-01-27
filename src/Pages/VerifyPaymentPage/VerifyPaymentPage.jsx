@@ -1,58 +1,58 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react"; // ✅ useEffect added
+import axios from "axios"; // ✅ axios added
 import { useCart } from "../../CartContext/CartContext";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const VerifyPaymentPage = () => {
   const { clearCart } = useCart();
   const { search } = useLocation();
   const navigate = useNavigate();
-  const [statusMsg, setStatusMsg] = useState("Verifying payment...");
+  const [statusMsg, setStatusMsg] = useState("Verifying Payment...");
   const verifyStarted = useRef(false);
 
+  // GRAB TOKEN
   const token = localStorage.getItem("authToken");
 
   useEffect(() => {
-    if (verifyStarted.current) return; // Prevent double calls
+    if (verifyStarted.current) return;
     verifyStarted.current = true;
 
     const params = new URLSearchParams(search);
-    const paymentSuccess = params.get("success");
-    const sessionId = params.get("session_id");
+    const paymentStatus = params.get("success"); // ✅ correct variable
+    const sessionId = params.get("session_id");  // ✅ correct variable
 
-    // ❌ Payment failed or missing session
-    if (paymentSuccess !== "true" || !sessionId) {
-      if (paymentSuccess === "false") {
-        setStatusMsg("Payment was cancelled. Redirecting to checkout...");
-        setTimeout(() => navigate("/checkout", { replace: true }), 2000);
+    // MISSING OR CANCELLED
+    if (paymentStatus !== "true" || !sessionId) {
+      if (paymentStatus === "false") {
+        navigate("/checkout", { replace: true });
         return;
       }
-      setStatusMsg("Payment failed, but your order is pending.");
+      setStatusMsg("Payment failed but order placed for completion");
       return;
     }
 
-    // ✅ Payment success, confirm with backend
     const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
+    // STRIPE SUCCESS
     axios
-      .get(
-        "https://website-gwoc-codegem-backend.onrender.com/api/orders/confirm",
-        { params: { session_id: sessionId }, headers: authHeaders }
-      )
+      .get("https://website-gwoc-codegem-backend.onrender.com/api/orders/confirm", {
+        params: { session_id: sessionId }, // ✅ correct param
+        headers: authHeaders,
+      })
       .then(() => {
-        clearCart(); // Frontend-only cart clearing
-        setStatusMsg("Payment verified! Redirecting to your orders...");
-        setTimeout(() => navigate("/my-orders", { replace: true }), 1000);
+        clearCart();
+        navigate("/my-orders", { replace: true });
       })
       .catch((err) => {
-        console.error("Payment confirmation error:", err);
-        setStatusMsg("Error verifying payment. Try again later.");
+        console.error("Confirmation error:", err);
+        setStatusMsg("There was an error verifying payment");
+        clearCart(false);
       });
   }, [search, clearCart, navigate, token]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] text-white px-4">
-      <p className="text-center text-lg">{statusMsg}</p>
+    <div className="min-h-screen flex items-center justify-center text-white">
+      <p>{statusMsg}</p>
     </div>
   );
 };
