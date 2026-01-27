@@ -81,8 +81,9 @@ export const createOrder = async (req, res) => {
         customer_email: email,
 
         // ✅ CORRECT STRIPE REDIRECT URL
-        success_url: `${process.env.BACKEND_URL}/api/orders/verify?success=true&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.BACKEND_URL}/api/orders/verify?success=false`,
+success_url: `${process.env.FRONTEND_URL}/myorder/verify?success=true&session_id={CHECKOUT_SESSION_ID}`,
+cancel_url: `${process.env.FRONTEND_URL}/checkout?success=false`,
+
 
         metadata: { firstName, lastName, email, phone },
       });
