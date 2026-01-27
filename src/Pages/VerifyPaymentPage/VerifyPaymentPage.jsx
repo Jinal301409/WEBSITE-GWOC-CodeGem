@@ -41,7 +41,7 @@ const VerifyPaymentPage = () => {
       })
       .then(() => {
         clearCart();
-        navigate("/myorders", { replace: true });
+        navigate("/my-orders", { replace: true });
       })
       .catch((err) => {
         console.error("Confirmation error:", err);
