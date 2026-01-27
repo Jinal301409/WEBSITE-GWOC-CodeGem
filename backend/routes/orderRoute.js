@@ -23,7 +23,18 @@ orderRouter.put("/getall/:id", updateAnyOrder);
 // ===============================
 // STRIPE REDIRECT (PUBLIC)
 // ===============================
-orderRouter.get("/verify", verifyPayment);
+orderRouter.get("/verify", (req, res) => {
+  const { session_id, success } = req.query;
+  const frontend = (process.env.FRONTEND_URL || "http://localhost:5173").replace(
+    /\/+$/,
+    ""
+  );
+  const params = new URLSearchParams();
+  if (success != null) params.set("success", String(success));
+  if (session_id) params.set("session_id", String(session_id));
+  const url = `${frontend}/myorder/verify?${params.toString()}`;
+  return res.redirect(302, url);
+});
 
 // ===============================
 // PROTECTED ROUTES
