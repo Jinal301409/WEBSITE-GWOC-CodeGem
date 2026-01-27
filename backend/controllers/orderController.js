@@ -153,28 +153,32 @@ export const createOrder = async (req, res) => {
 // ===============================
 export const confirmPayment = async (req, res) => {
   try {
-    const sessionId = req.body.sessionId || req.query.session_id || req.query.sessionId || req.query.session;
-    if (!sessionId) return res.status(400).json({ message: 'sessionId required' });
+    const session_id = req.body.sessionId || req.query.session_id;
 
-    // try to find order by various fields
-    let order = await Order.findOne({ sessionId })
-      || await Order.findOne({ session_id: sessionId })
-      || await Order.findOne({ paymentIntentId: sessionId })
-      || await Order.findOne({ sessionId: { $exists: true, $eq: sessionId } });
-
-    if (!order) {
-      // as a fallback, try to find by order id encoded in sessionId or other heuristics
-      return res.status(404).json({ message: 'Order not found for session' });
+    if (!session_id) {
+      return res.status(400).json({ message: "session_id required" });
     }
 
-    order.paymentStatus = 'succeeded';
-    if (!order.status) order.status = 'scheduled';
-    await order.save();
+    const session = await stripe.checkout.sessions.retrieve(session_id);
 
-    res.json({ order });
-  } catch (err) {
-    console.error('confirmPayment error', err);
-    res.status(500).json({ message: 'Server error' });
+    if (session.payment_status === "paid") {
+      const order = await Order.findOneAndUpdate(
+        { sessionId: session_id },
+        { paymentStatus: "succeeded" },
+        { new: true }
+      );
+
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      return res.json({ order });
+    }
+
+    res.status(400).json({ message: "Payment not completed" });
+  } catch (error) {
+    console.error("confirmPayment Error:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
@@ -207,25 +211,6 @@ export const verifyPayment = async (req, res) => {
     res.redirect(`${process.env.FRONTEND_URL}/payment-failed`);
   }
 };
-
-// ===============================
-// REDIRECT VERIFY PAYMENT TO FRONTEND
-// ===============================
-export const verifyRedirect = (req, res) => {
-  try {
-    const { session_id, sessionId, session, success } = req.query;
-    const sid = session_id || sessionId || session;
-    const params = new URLSearchParams();
-    if (sid) params.set('session_id', sid);
-    if (success) params.set('success', success);
-    const frontend = (process.env.FRONTEND_URL || 'https://website-gwoc-codegem.onrender.com').replace(/\/+$/, '');
-    const redirectTo = `${frontend}/myorder/verify${params.toString() ? ('?' + params.toString()) : ''}`;
-    return res.redirect(302, redirectTo);
-  } catch (err) {
-    console.error('verifyRedirect error', err);
-    return res.status(500).send('Server error');
-  }
-}
 
 // ===============================
 // GET USER ORDERS
@@ -347,5 +332,3 @@ export const getBookedSlots = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-export default { getBookedSlots, createOrder, confirmPayment, verifyRedirect }

@@ -18,46 +18,35 @@ const VerifyPaymentPage = () => {
     verifyStarted.current = true;
 
     const params = new URLSearchParams(search);
-    // accept multiple param names that different payment providers / redirects might use
-    const paymentStatus = params.get("success") || params.get("payment_status") || params.get("status");
-    const sessionId =
-      params.get("session_id") || params.get("sessionId") || params.get("session");
+    const paymentStatus = params.get("success"); // ✅ correct variable
+    const sessionId = params.get("session_id");  // ✅ correct variable
 
-    // If there's no session id but a code or token, still attempt to use it as sessionId
-    if (!sessionId) {
-      setStatusMsg("Missing session identifier from payment provider.");
-      // navigate back to checkout after a short delay
-      setTimeout(() => navigate("/checkout", { replace: true }), 2000);
-      return;
-    }
-
-    // If paymentStatus explicitly indicates failure, go back to checkout
-    if (paymentStatus && (paymentStatus === "false" || paymentStatus === "cancelled" || paymentStatus === "failed")) {
-      setStatusMsg("Payment was cancelled or failed. Returning to checkout...");
-      setTimeout(() => navigate("/checkout", { replace: true }), 1600);
+    // MISSING OR CANCELLED
+    if (paymentStatus !== "true" || !sessionId) {
+      if (paymentStatus === "false") {
+        navigate("/checkout", { replace: true });
+        return;
+      }
+      setStatusMsg("Payment failed but order placed for completion");
       return;
     }
 
     const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
-    // Use POST to match backend confirm endpoint which expects sessionId in body
+    // STRIPE SUCCESS
     axios
-      .post(
-        "https://website-gwoc-codegem-backend.onrender.com/api/orders/confirm",
-        { sessionId },
-        { headers: authHeaders }
-      )
-      .then((res) => {
-        // backend confirmed the payment and updated order
+      .get("https://website-gwoc-codegem-backend.onrender.com/api/orders/confirm", {
+        params: { session_id: sessionId }, // ✅ correct param
+        headers: authHeaders,
+      })
+      .then(() => {
         clearCart();
-        setStatusMsg("Payment confirmed. Redirecting to orders...");
-        navigate("/myorder", { replace: true });
+        navigate("/my-orders", { replace: true });
       })
       .catch((err) => {
         console.error("Confirmation error:", err);
-        const msg = err.response?.data?.message || "There was an error verifying payment";
-        setStatusMsg(msg);
-        // keep user on page so they can retry or contact support
+        setStatusMsg("There was an error verifying payment");
+        clearCart(false);
       });
   }, [search, clearCart, navigate, token]);
 
