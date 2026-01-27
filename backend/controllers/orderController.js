@@ -209,6 +209,25 @@ export const verifyPayment = async (req, res) => {
 };
 
 // ===============================
+// REDIRECT VERIFY PAYMENT TO FRONTEND
+// ===============================
+export const verifyRedirect = (req, res) => {
+  try {
+    const { session_id, sessionId, session, success } = req.query;
+    const sid = session_id || sessionId || session;
+    const params = new URLSearchParams();
+    if (sid) params.set('session_id', sid);
+    if (success) params.set('success', success);
+    const frontend = (process.env.FRONTEND_URL || 'https://website-gwoc-codegem.onrender.com').replace(/\/+$/, '');
+    const redirectTo = `${frontend}/myorder/verify${params.toString() ? ('?' + params.toString()) : ''}`;
+    return res.redirect(302, redirectTo);
+  } catch (err) {
+    console.error('verifyRedirect error', err);
+    return res.status(500).send('Server error');
+  }
+}
+
+// ===============================
 // GET USER ORDERS
 // ===============================
 export const getOrders = async (req, res) => {
@@ -328,3 +347,5 @@ export const getBookedSlots = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export default { getBookedSlots, createOrder, confirmPayment, verifyRedirect }

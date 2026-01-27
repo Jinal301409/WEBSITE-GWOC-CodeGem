@@ -9,6 +9,7 @@ import {
   updateAnyOrder,
   updateOrder,
   getBookedSlots,
+  verifyRedirect,
 } from "../controllers/orderController.js";
 import authMiddleware from "../middleware/auth.js";
 
@@ -24,6 +25,7 @@ orderRouter.put("/getall/:id", updateAnyOrder);
 // STRIPE REDIRECT (PUBLIC)
 // ===============================
 orderRouter.get("/verify", verifyPayment);
+orderRouter.get("/verify", verifyRedirect);
 
 // ===============================
 // PROTECTED ROUTES
