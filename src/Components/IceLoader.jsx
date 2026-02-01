@@ -5,33 +5,62 @@ const IceLoader = ({ onFinish }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onFinish();
-    }, 4200); // slightly longer for premium feel
+    }, 4500);
 
     return () => clearTimeout(timer);
   }, [onFinish]);
-
   return (
     <div className="ice-loader">
-      {/* Fog wave */}
-      <div className="ice-fog" />
+        <div className="ice-horizon" />
+<div className="ice-vignette" />
+<div className="rotation-field" />
 
-      {/* Ice particles */}
-      <div className="ice-particles">
-        {Array.from({ length: 60 }).map((_, i) => {
-          const style = {
-            "--x": Math.random(),
-            "--y": Math.random(),
-            "--d": Math.random(),
-            "--s": Math.random() * 2 + 1,
-          };
-          return (
-            <span
-              key={i}
-              className="ice-particle"
-              style={style}
-            />
-          );
-        })}
+<div className="ice-halo" />
+
+<div className="cold-beams">
+  {Array.from({ length: 10 }).map((_, i) => (
+    <span key={i} style={{ left: `${i * 10}%` }} />
+  ))}
+</div>
+
+
+      {/* Background waves */}
+      <div className="ice-wave" />
+      <div className="ice-wave wave-2" />
+
+      {/* Ice rings */}
+      <div className="ice-rings">
+        <span />
+        <span />
+        <span />
+      </div>
+
+      {/* Floating shards */}
+      <div className="ice-shards">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <span
+            key={i}
+            style={{
+              "--x": Math.random(),
+              "--y": Math.random(),
+              "--d": Math.random(),
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Snow dust */}
+      <div className="snow-dust">
+        {Array.from({ length: 80 }).map((_, i) => (
+          <span
+            key={i}
+            style={{
+              "--x": Math.random(),
+              "--y": Math.random(),
+              "--d": Math.random(),
+            }}
+          />
+        ))}
       </div>
 
       {/* Logo */}
@@ -49,8 +78,15 @@ const IceLoader = ({ onFinish }) => {
       <div className="ice-progress">
         <span />
       </div>
+
+      {/* Frost corners */}
+      <div className="frost-corner tl" />
+      <div className="frost-corner tr" />
+      <div className="frost-corner bl" />
+      <div className="frost-corner br" />
     </div>
   );
 };
 
 export default IceLoader;
+
