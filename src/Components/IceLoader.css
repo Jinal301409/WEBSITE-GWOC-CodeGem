@@ -1,0 +1,110 @@
+.ice-loader {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, #0b1d2e, #020617);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* ================= LOGO ================= */
+
+.ice-logo {
+  font-family: "Cinzel", serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  letter-spacing: 0.15em;
+  color: #e6faff;
+  display: flex;
+  gap: 0.3em;
+}
+
+.chill {
+  opacity: 0;
+  animation: chillIn 1.8s ease-out forwards;
+}
+
+.thrive {
+  opacity: 0;
+  animation: thriveIn 1.8s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+.ice-sub {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  letter-spacing: 0.3em;
+  color: rgba(200, 240, 255, 0.6);
+  opacity: 0;
+  animation: subFade 1.5s ease forwards;
+  animation-delay: 1.6s;
+}
+
+/* ================= PARTICLES ================= */
+
+.ice-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ice-particle {
+  position: absolute;
+  left: calc(var(--x) * 100%);
+  top: calc(var(--y) * 100%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(180, 230, 255, 0.8);
+  filter: blur(1px);
+  animation: drift linear infinite;
+  animation-duration: calc(10s + var(--d) * 8s);
+  animation-delay: calc(-1s * var(--d));
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes drift {
+  from {
+    transform: translateY(20px) translateX(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.7;
+  }
+  to {
+    transform: translateY(-140vh) translateX(40px);
+    opacity: 0;
+  }
+}
+
+@keyframes chillIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes thriveIn {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subFade {
+  to {
+    opacity: 1;
+  }
+}
+

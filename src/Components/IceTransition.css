@@ -1,0 +1,122 @@
+.ice-loader {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, #0b1d2e, #020617);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* ================= LOGO ================= */
+
+.ice-logo {
+  font-family: "Cinzel", serif; /* elegant, premium */
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  letter-spacing: 0.15em;
+  color: #e6faff;
+  display: flex;
+  gap: 0.3em;
+  animation: logoFade 2.8s ease-out forwards;
+}
+
+.chill {
+  opacity: 0;
+  animation: chillIn 2.2s ease-out forwards;
+}
+
+.thrive {
+  opacity: 0;
+  animation: thriveIn 2.2s ease-out forwards;
+  animation-delay: 0.6s;
+}
+
+.ice-sub {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  letter-spacing: 0.3em;
+  color: rgba(200, 240, 255, 0.6);
+  opacity: 0;
+  animation: subFade 2s ease forwards;
+  animation-delay: 1.8s;
+}
+
+/* ================= PARTICLES ================= */
+
+.ice-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ice-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(180, 230, 255, 0.7);
+  filter: blur(1px);
+  animation: drift linear infinite;
+}
+
+/* randomize particles */
+.ice-particle:nth-child(n) {
+  left: calc(100% * var(--x));
+  top: calc(100% * var(--y));
+  animation-duration: calc(12s + var(--d) * 8s);
+  animation-delay: calc(-1s * var(--d));
+}
+
+.ice-particle {
+  --x: calc(random() * 1);
+  --y: calc(random() * 1);
+  --d: calc(random() * 1);
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes drift {
+  from {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(-120vh) translateX(30px);
+    opacity: 0;
+  }
+}
+
+@keyframes chillIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes thriveIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subFade {
+  to {
+    opacity: 1;
+  }
+}
+
+

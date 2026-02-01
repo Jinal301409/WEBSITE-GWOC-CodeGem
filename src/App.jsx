@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React, { useState } from 'react';
 import Navbar from './Components/Navbar/Navbar';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Pages/Home/Home';
@@ -13,54 +13,66 @@ import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
 import MyOrderPage from './Pages/MyOrderPage/MyOrderPage';
 import VerifyPaymentPage from './Pages/VerifyPaymentPage/VerifyPaymentPage';
 import CheckoutPage from './Pages/CheckoutPage/CheckoutPage';
+import IceLoader from './Components/IceLoader';
+import IceTransition from './Components/IceTransition';
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
   return (
-    <div className='relative'>
-    <Routes>
-      <Route path='/' element={<Home />} />
-      <Route path='/contact' element={<ContactPage />} />
-      <Route path='/about' element={<AboutPage />} />
-      <Route path='/services' element={<Services />} />
-      <Route path='/login' element={<Home />} />
-      <Route path='/signup' element={<SignUp />} />
+    <div className="relative">
+      {/* LOADER */}
+      {loading && <IceLoader onFinish={() => setLoading(false)} />}
 
-      {/* PAYMENT VERIFICATION */}
-      <Route path='/myorder/verify' element={<VerifyPaymentPage />} />
+      {/* MAIN APP */}
+      {!loading && (
+        <>
+          <IceTransition />
 
-      <Route path='/aware' element={<AwarenessPage />} />
-      <Route path='/photo' element={<Events />} />
-      <Route path='/cart' element={<Cart />} />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/contact' element={<ContactPage />} />
+            <Route path='/about' element={<AboutPage />} />
+            <Route path='/services' element={<Services />} />
+            <Route path='/login' element={<Home />} />
+            <Route path='/signup' element={<SignUp />} />
 
-      <Route
-        path='/checkout'
-        element={
-          <PrivateRoute>
-            <CheckoutPage />
-          </PrivateRoute>
-        }
-      />
+            {/* PAYMENT VERIFICATION */}
+            <Route path='/myorder/verify' element={<VerifyPaymentPage />} />
 
-      {/*EXISTING ROUTE */}
-      <Route
-        path='/myorder'
-        element={
-          <PrivateRoute>
-            <MyOrderPage />
-          </PrivateRoute>
-        }
-      />
+            <Route path='/aware' element={<AwarenessPage />} />
+            <Route path='/photo' element={<Events />} />
+            <Route path='/cart' element={<Cart />} />
 
-      {/*NEW ROUTE (FIXES STRIPE REDIRECT) */}
-      <Route
-        path='/my-orders'
-        element={
-          <PrivateRoute>
-            <MyOrderPage />
-          </PrivateRoute>
-        }
-      />
-    </Routes>
+            <Route
+              path='/checkout'
+              element={
+                <PrivateRoute>
+                  <CheckoutPage />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path='/myorder'
+              element={
+                <PrivateRoute>
+                  <MyOrderPage />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path='/my-orders'
+              element={
+                <PrivateRoute>
+                  <MyOrderPage />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </>
+      )}
     </div>
   );
 };
