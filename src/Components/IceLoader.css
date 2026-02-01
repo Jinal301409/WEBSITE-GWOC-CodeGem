@@ -1,3 +1,5 @@
+/* ================= BASE ================= */
+
 .ice-loader {
   position: fixed;
   inset: 0;
@@ -10,7 +12,48 @@
   overflow: hidden;
 }
 
+/* ================= FOG ================= */
+
+.ice-fog {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(200, 240, 255, 0.12),
+    transparent
+  );
+  animation: fogMove 4s ease-in-out forwards;
+}
+
+@keyframes fogMove {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
 /* ================= LOGO ================= */
+
+.ice-logo-wrapper {
+  position: relative;
+}
+
+.ice-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(
+    circle,
+    rgba(150, 230, 255, 0.35),
+    transparent 70%
+  );
+  filter: blur(25px);
+  opacity: 0;
+  animation: glowPulse 2.5s ease forwards;
+}
+
+@keyframes glowPulse {
+  40% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
 
 .ice-logo {
   font-family: "Cinzel", serif;
@@ -21,25 +64,73 @@
   gap: 0.3em;
 }
 
-.chill {
+.chill,
+.thrive {
   opacity: 0;
-  animation: chillIn 1.8s ease-out forwards;
+  position: relative;
+}
+
+.chill {
+  animation: freezeIn 1.8s ease forwards;
 }
 
 .thrive {
-  opacity: 0;
-  animation: thriveIn 1.8s ease-out forwards;
+  animation: freezeIn 1.8s ease forwards;
   animation-delay: 0.5s;
+}
+
+@keyframes freezeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
 }
 
 .ice-sub {
   margin-top: 14px;
   font-size: 0.9rem;
   letter-spacing: 0.3em;
-  color: rgba(200, 240, 255, 0.6);
+  color: rgba(200, 240, 255, 0.65);
   opacity: 0;
   animation: subFade 1.5s ease forwards;
-  animation-delay: 1.6s;
+  animation-delay: 2s;
+}
+
+@keyframes subFade {
+  to { opacity: 1; }
+}
+
+/* ================= PROGRESS ================= */
+
+.ice-progress {
+  margin-top: 28px;
+  width: 180px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.ice-progress span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #bfefff,
+    transparent
+  );
+  animation: loadBar 3.8s ease forwards;
+}
+
+@keyframes loadBar {
+  to { width: 100%; }
 }
 
 /* ================= PARTICLES ================= */
@@ -54,57 +145,24 @@
   position: absolute;
   left: calc(var(--x) * 100%);
   top: calc(var(--y) * 100%);
-  width: 4px;
-  height: 4px;
+  width: calc(2px * var(--s));
+  height: calc(2px * var(--s));
   border-radius: 50%;
   background: rgba(180, 230, 255, 0.8);
   filter: blur(1px);
   animation: drift linear infinite;
-  animation-duration: calc(10s + var(--d) * 8s);
-  animation-delay: calc(-1s * var(--d));
+  animation-duration: calc(10s + var(--d) * 10s);
 }
-
-/* ================= ANIMATIONS ================= */
 
 @keyframes drift {
   from {
-    transform: translateY(20px) translateX(0);
+    transform: translateY(40px);
     opacity: 0;
   }
-  20% {
-    opacity: 0.7;
-  }
+  20% { opacity: 0.8; }
   to {
-    transform: translateY(-140vh) translateX(40px);
+    transform: translateY(-160vh) translateX(50px);
     opacity: 0;
-  }
-}
-
-@keyframes chillIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes thriveIn {
-  from {
-    opacity: 0;
-    transform: translateY(35px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes subFade {
-  to {
-    opacity: 1;
   }
 }
 
