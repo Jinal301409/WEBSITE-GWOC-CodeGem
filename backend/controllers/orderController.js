@@ -168,7 +168,7 @@ export const confirmPayment = async (req, res) => {
         { paymentStatus: "succeeded" },
         { new: true }
       );
-
+      return res.json({ success: true, order });
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
