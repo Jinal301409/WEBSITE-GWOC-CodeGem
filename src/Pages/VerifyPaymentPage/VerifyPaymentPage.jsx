@@ -12,47 +12,42 @@ const VerifyPaymentPage = () => {
 
   // GRAB TOKEN
   const token = localStorage.getItem("authToken");
-  const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
   useEffect(() => {
     if (verifyStarted.current) return;
     verifyStarted.current = true;
 
     const params = new URLSearchParams(search);
-    const paymentStatus = params.get("success");
-    const sessionId = params.get("session_id");
+    const paymentStatus = params.get("success"); // ✅ correct variable
+    const sessionId = params.get("session_id");  // ✅ correct variable
 
-    if (!sessionId) {
-      setStatusMsg("Missing session id. Redirecting...");
-      setTimeout(() => navigate('/checkout', { replace: true }), 1500);
+    // MISSING OR CANCELLED
+    if (paymentStatus !== "true" || !sessionId) {
+      if (paymentStatus === "false") {
+        navigate("/checkout", { replace: true });
+        return;
+      }
+      setStatusMsg("Payment failed but order placed for completion");
       return;
     }
 
-    let attempts = 0;
-    const maxAttempts = 12; // poll for up to ~24s (interval 2s)
+    const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
-    const poll = async () => {
-      attempts++;
-      try {
-        const resp = await axios.get('https://website-gwoc-codegem-backend.onrender.com/api/orders/confirm', { params: { session_id: sessionId }, headers });
-        if (resp.data && resp.data.order) {
-          clearCart();
-          navigate('/my-orders', { replace: true });
-          return;
-        }
-      } catch (err) {
-        // if 404 or payment not ready, continue polling
-        if (attempts >= maxAttempts) {
-          setStatusMsg('Could not confirm payment. Please check your orders page.');
-          // still redirect after short delay so user sees orders
-          setTimeout(() => navigate('/my-orders', { replace: true }), 1500);
-          return;
-        }
-      }
-      setTimeout(poll, 2000);
-    };
-
-    poll();
+    // STRIPE SUCCESS
+    axios
+      .get("https://website-gwoc-codegem-backend.onrender.com/api/orders/confirm", {
+        params: { session_id: sessionId }, // ✅ correct param
+        headers: authHeaders,
+      })
+      .then(() => {
+        clearCart();
+        navigate("/my-orders", { replace: true });
+      })
+      .catch((err) => {
+        console.error("Confirmation error:", err);
+        setStatusMsg("There was an error verifying payment");
+        clearCart(false);
+      });
   }, [search, clearCart, navigate, token]);
 
   return (

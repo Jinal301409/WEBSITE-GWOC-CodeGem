@@ -18,20 +18,23 @@ const Order = () => {
   const fetchOrders = async () => {
     setLoading(true);
 
-    // Candidate base URLs: Vite env, explicit localhost, and relative path
     const envBase = (import.meta && import.meta.env && import.meta.env.VITE_API_URL) || null;
+    // try VITE url, explicit backend host, then relative
     const bases = [envBase, 'https://website-gwoc-codegem-backend.onrender.com', ''].filter(Boolean);
 
     let lastError = null;
 
+    // read token from common keys
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
     for (const base of bases) {
-      // Try each base with a few attempts
       const maxAttempts = 2;
       for (let attempt = 1; attempt <= maxAttempts && mounted; attempt++) {
         try {
-          const token = localStorage.getItem('token');
-          const url = base ? `${base}https://website-gwoc-codegem-backend.onrender.com/api/orders/getall` : 'https://website-gwoc-codegem-backend.onrender.com/api/orders/getall';
-          const response = await axios.get(url, token ? { headers: { Authorization: `Bearer ${token}` } } : undefined);
+          // ensure we join base and path correctly
+          const url = base ? `${base}/api/orders/getall` : '/api/orders/getall';
+          const response = await axios.get(url, { headers, withCredentials: true });
 
           const formatted = (response.data || []).map(order => ({
             ...order,
@@ -47,26 +50,24 @@ const Order = () => {
 
           if (!mounted) return;
           setOrders(formatted);
-          setApiBase(base); // Store the working base URL
+          setApiBase(base);
           setError(null);
           setLoading(false);
           return;
         } catch (err) {
           lastError = err;
-          // If network error or connection refused, wait and retry other bases
           const isNetworkError = !err.response;
           if (attempt < maxAttempts) await delay(200 * attempt);
-          if (!isNetworkError) break; // non-network error, stop retrying this base
+          if (!isNetworkError) break;
         }
       }
     }
 
     if (mounted) {
-      // Provide helpful guidance when connection refused or network error
       const msg = lastError?.message || 'Failed to load orders.';
       const isConnRefused = lastError && (lastError.code === 'ECONNREFUSED' || /ECONNREFUSED/.test(lastError.message) || /Network Error/.test(lastError.message));
       setError(isConnRefused
-        ? 'Cannot reach backend at https://website-gwoc-codegem-backend.onrender.com. Start the backend (cd backend && npm run dev) then reload.'
+        ? 'Cannot reach backend. Start the backend then reload.'
         : (lastError?.response?.data?.message || msg));
       setLoading(false);
     }
@@ -78,16 +79,18 @@ const Order = () => {
 }, []);
 const handleStatusChange = async (orderId, newStatus) => {
   try {
-   await axios.put(
-  `https://website-gwoc-codegem-backend.onrender.com/api/orders/getall/${orderId}`,
-  { status: newStatus },
-  {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    }
-  }
-);
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
+    // use apiBase if available, otherwise fallback to deployed host
+    const base = apiBase || 'https://website-gwoc-codegem-backend.onrender.com';
+    const url = `${base}/api/orders/getall/${orderId}`;
+
+    await axios.put(
+      url,
+      { status: newStatus },
+      { headers, withCredentials: true }
+    );
 
     setOrders(
       orders.map(o =>
