@@ -5,65 +5,20 @@ import { dummyMenuData } from '../../assets/OmhDD'
 import { FaMinus, FaPlus, FaArrowRight } from 'react-icons/fa'
 import './OurMenu.css'
 
-// helper to build a safe image URL from backend values
-const PLACEHOLDER = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='100%' height='100%' fill='%2310283a'/><text x='50%' y='50%' fill='%23cbd5e1' font-size='18' font-family='Arial' text-anchor='middle' dy='.3em'>Image not available</text></svg>`;
-
-const buildImageUrl = (raw) => {
-  if (!raw) return PLACEHOLDER;
-  try {
-    const s = String(raw).trim();
-    if (!s) return PLACEHOLDER;
-    if (/^https?:\/\//i.test(s)) return s;
-    // normalize backslashes to forward slashes
-    const normalized = s.replace(/\\/g, '/');
-    // if it already contains /uploads/ extract filename
-    const uploadsIndex = normalized.indexOf('/uploads/');
-    if (uploadsIndex !== -1) {
-      const filename = normalized.slice(uploadsIndex + '/uploads/'.length);
-      return `https://website-gwoc-codegem-backend.onrender.com/uploads/${filename}`;
-    }
-    // if it starts with uploads/
-    if (normalized.startsWith('uploads/')) return `https://website-gwoc-codegem-backend.onrender.com/${normalized}`;
-    // if seems like a filename (no slash) assume uploads
-    if (!normalized.includes('/')) return `https://website-gwoc-codegem-backend.onrender.com/uploads/${normalized}`;
-    // otherwise try to return as-is
-    return normalized;
-  } catch {
-    return PLACEHOLDER;
-  }
-}
-
 const categories = ['Ice Bath Therapy', 'Jacuzzi Therapy', 'Steam Therapy', 'Combo Packages']
 
 const OurMenu = () => {
   const [activeCategory, setActiveCategory] = useState(categories[0]);
   const [apiItems, setApiItems] = useState([]);
 
-  // Fetch items from API and normalize fields to the component's expected shape
+  // Fetch items from API
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await axios.get('https://website-gwoc-codegem-backend.onrender.com/api/items');
-        // Support both: response.data is an array OR response.data.data contains the array
-        const raw = Array.isArray(response.data) ? response.data : (response.data && Array.isArray(response.data.data) ? response.data.data : []);
-
-        const mapped = raw.map(it => ({
-          // keep original ids
-          _id: it._id || it.id,
-          id: it._id || it.id,
-          // component expects `title`, `description`, `price`, `image`, `category`, `duration`, `benefits`
-          title: it.title || it.name || '',
-          name: it.name || it.title || '',
-          description: it.description || it.desc || '',
-          price: (it.price != null ? Number(it.price) : (it.cost != null ? Number(it.cost) : 0)),
-          duration: it.duration || it.time || '',
-          benefits: it.benefits || it.tags || [],
-          // store raw image reference (filename or full URL). buildImageUrl will normalize it.
-          image: it.imageUrl || it.image || '',
-          category: it.category || '',
-        }));
-
-        setApiItems(mapped);
+        const response = await axios.get('http://localhost:4000/api/items');
+        if (response.data && response.data.data) {
+           setApiItems(response.data.data);
+        }
       } catch (error) {
         console.error("Error fetching items:", error);
       }
@@ -125,8 +80,7 @@ const OurMenu = () => {
                 className='relative bg-blue-900/20 rounded-2xl overflow-hidden border border-blue-800/30 backdrop-blur-sm flex flex-col transition-all duration-500'
                 style={{ '--index': i }}>
                 <div className='relative h-48 sm:h-56 md:h-60 flex items-center justify-center bg-white/10'>
-                  <img src={buildImageUrl(item.image || item.imageUrl)} alt={item.name}
-                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = PLACEHOLDER }}
+                  <img src={item.image} alt={item.name}
                     className=' max-h-full max-w-full object-contain transition-all duration-700' />
                 </div>
                 <div className='p-4 sm:p-6 flex flex-col flex-grow'>

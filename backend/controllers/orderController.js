@@ -1,6 +1,5 @@
 import Stripe from "stripe";
 import Order from "../modals/orderModal.js";
-import Item from "../modals/itemModal.js";
 import "dotenv/config";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -23,28 +22,11 @@ export const createOrder = async (req, res) => {
       tax,
       total,
       items,
-      bookingDate,
-      timeSlot,
     } = req.body;
 
-    // validate required booking fields
-    if (!bookingDate || !timeSlot) {
-      return res
-        .status(400)
-        .json({ message: "Booking date and time slot are required" });
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: "Invalid or empty items array" });
     }
-
-    const bDate = new Date(bookingDate);
-    const start = new Date(bDate.toISOString().slice(0, 10) + "T00:00:00.000Z");
-    const end = new Date(bDate.toISOString().slice(0, 10) + "T23:59:59.999Z");
-
-    // check slot already booked
-    const existing = await Order.findOne({
-      bookingDate: { $gte: start, $lte: end },
-      timeSlot,
-    });
-    if (existing)
-      return res.status(409).json({ message: "Time slot already booked" });
 
     const orderItems = items.map(
       ({ item, name, price, imageUrl, quantity }) => {
@@ -81,9 +63,8 @@ export const createOrder = async (req, res) => {
         customer_email: email,
 
         // ✅ CORRECT STRIPE REDIRECT URL
-success_url: `${process.env.FRONTEND_URL}/myorder/verify?success=true&session_id={CHECKOUT_SESSION_ID}`,
-cancel_url: `${process.env.FRONTEND_URL}/checkout?success=false`,
-
+        success_url: `${process.env.BACKEND_URL}/api/orders/verify?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.BACKEND_URL}/api/orders/verify?success=false`,
 
         metadata: { firstName, lastName, email, phone },
       });
@@ -106,8 +87,6 @@ cancel_url: `${process.env.FRONTEND_URL}/checkout?success=false`,
         sessionId: session.id,
         paymentIntentId: session.payment_intent || null,
         paymentStatus: "pending",
-        bookingDate: bDate,
-        timeSlot,
       });
 
       await newOrder.save();
@@ -137,8 +116,6 @@ cancel_url: `${process.env.FRONTEND_URL}/checkout?success=false`,
       shipping: shippingCost,
       items: orderItems,
       paymentStatus: "pending",
-      bookingDate: bDate,
-      timeSlot,
     });
 
     await newOrder.save();
@@ -310,26 +287,5 @@ export const updateOrder = async (req, res) => {
   } catch (error) {
     console.error("updateOrder Error:", error);
     res.status(500).json({ message: "Server Error" });
-  }
-};
-
-// ===============================
-// GET BOOKED SLOTS
-// ===============================
-export const getBookedSlots = async (req, res) => {
-  try {
-    const { date } = req.query; // ISO date string (YYYY-MM-DD)
-    if (!date) return res.status(400).json({ message: "Date required" });
-
-    const start = new Date(date + "T00:00:00.000Z");
-    const end = new Date(date + "T23:59:59.999Z");
-
-    const orders = await Order.find({
-      bookingDate: { $gte: start, $lte: end },
-    });
-    const slots = orders.map((o) => o.timeSlot).filter(Boolean);
-    res.json({ slots });
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
   }
 };

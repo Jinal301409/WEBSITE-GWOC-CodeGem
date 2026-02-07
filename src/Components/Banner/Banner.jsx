@@ -13,7 +13,7 @@ const Banner = () => {
     console.log('Searching for:', searchQuery);
   }
   return (
-    <div className='relative banner-hero'>
+    <div className='relative'>
       <div className=' bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white
         py-16 px-4 sm:px-8 relative overflow-hidden'>
 
@@ -89,7 +89,7 @@ const Banner = () => {
             <div className=' relative rounded-full p-1 bg-gradient-to-br from-blue-700 via-blue-800 to-blue-600
             shadow-2xl z-20 w-[250px] xs:w-[300px] sm:w-[350px] h-[250px] xs:h-[300px] sm:h-[350px] mx-auto'>
               <img src={bannerImage} alt="Banner" className=' rounded-full border-4 xs:border-8 border-blue-900/50
-                w-full h-full object-cover object-top img-float'/>
+                w-full h-full object-cover object-top'/>
               <div className=' absolute inset-0 rounded-full bg-gradient-to-b from-transparent to-blue-900/40 mix-blend-medium' />
             </div>
             {/* ORBITAL IMAGES */}

@@ -51,21 +51,20 @@ const Footer = () => {
               <span className={styles.underline} />
             </h3>
             <ul className={styles.linkList}>
-              {[
-                { name: "Home", path: "/" },
-                { name: "Services", path: "/services" },
-                { name: "About", path: "/about" },
-                { name: "Awareness Page", path: "/aware" },
-                { name: "Photo Gallary/Events", path: "/photo" },
-                { name: "Contact Us", path: "/contact" }
-              ].map((link, i) => (
+              {["Home", "Services", "About", "Awareness Page", "Photo Gallary/Events", "Contact Us"].map((link, i) => (
                 <li key={i}>
-                  <Link
-                    to={link.path}
+                  <a
+                    href={
+                      link === "Home"
+                        ? "/"
+                        : link === "Contact Us"
+                          ? "/contact"
+                          : "/cars"
+                    }
                     className={styles.linkItem}
                   >
-                    {link.name}
-                  </Link>
+                    {link}
+                  </a>
                 </li>
               ))}
             </ul>
