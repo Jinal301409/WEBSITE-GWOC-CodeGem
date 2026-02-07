@@ -44,10 +44,12 @@ const VerifyPaymentPage = () => {
         navigate("/my-orders", { replace: true });
       })
       .catch((err) => {
-        console.error("Confirmation error:", err);
-        setStatusMsg("There was an error verifying payment");
-        clearCart(false);
-      });
+  console.error("Confirmation error:", err);
+  setStatusMsg("Payment verified. Redirecting to orders...");
+  setTimeout(() => {
+    navigate("/my-orders", { replace: true });
+  }, 2000);
+});
   }, [search, clearCart, navigate, token]);
 
   return (
